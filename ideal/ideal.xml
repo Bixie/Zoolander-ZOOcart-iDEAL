@@ -7,10 +7,15 @@
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only</license>
 	<authorEmail>info@bixie.nl</authorEmail>
 	<authorUrl>http://www.bixie.nl</authorUrl>
-	<version>3.1 BETA</version>
+	<version>1.0 BETA</version>
 	<description>PLG_ZOOCART_PAYMENT_IDEAL_DESCRIPTION</description>
+	<scriptfile>install.script.php</scriptfile>
 	<files>
 		<filename plugin="ideal">ideal.php</filename>
+		<filename>install.script.php</filename>
+		<folder>sql</folder>
+		<folder>tables</folder>
+		<folder>classes</folder>
 		<folder>tmpl</folder>
 	</files>
 	<languages folder="language">
