@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="algemeen">
+		<fields name="betalen">
+			<fieldset name="betaling">
+				<fieldset name="bix_ideal" label="COM_BIXPRINTSHOP_PLUGIN_TITLE_BIX_IDEAL">
+					<fields name="bix_ideal">
+						<fields name="gatewayideal-simulator">
+						<field name="spacerOmni" type="spacer" hr="false" class="title" label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_SIMULATOR"  />
+							<field name="GATEWAY_NAME" type="hidden" default="iDEAL Simulator - iDEAL" />
+							<field name="GATEWAY_WEBSITE" type="hidden" default="http://www.ideal-simulator.nl/" />
+							<field name="GATEWAY_METHOD" type="hidden" default="ideal-simulator" />
+							<field name="GATEWAY_VALIDATION" type="hidden" default="0" />
+						</fields>
+					</fields>
+				</fieldset>
+			</fieldset>
+		</fields>
+	</fields>
+</form>

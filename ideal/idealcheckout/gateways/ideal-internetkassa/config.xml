@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="algemeen">
+		<fields name="betalen">
+			<fieldset name="betaling">
+				<fieldset name="bix_ideal" label="COM_BIXPRINTSHOP_PLUGIN_TITLE_BIX_IDEAL">
+					<fields name="bix_ideal">
+						<fields name="gatewayideal-internetkassa">
+						<field name="spacerInetKassa" type="spacer" hr="false" class="title" label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_INTERNETKASSA"  />
+							<field name="PSP_ID" type="text" size="40" class="inputbox"
+								label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PSPID" 
+								description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PSPID_DESC" 
+								default="" 
+								filter="safehtml" /> 
+							<field name="SHA_1_IN" type="text" size="40" class="inputbox"
+								label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_SHA_1_IN" 
+								description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_SHA_1_IN_DESC" 
+								default="" 
+								filter="safehtml" /> 
+							<field name="SHA_1_OUT" type="text" size="40" class="inputbox"
+								label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_SHA_1_OUT" 
+								description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_SHA_1_OUT_DESC" 
+								default="" 
+								filter="safehtml" /> 
+							<field name="TEST_MODE" type="bixradio"
+								label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_TEST_MODE"
+								description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_TEST_MODE_DESC"
+								default="0"	>
+								<option value="1">BIX_YES</option>
+								<option value="0">BIX_NO</option>
+							</field>
+							<field name="PAYMENT_PAGE_TITLE" type="text" size="40" class="inputbox"
+								label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_TITLE" 
+								description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_TITLE_DESC" 
+								default="" 
+								filter="safehtml" /> 
+							<field name="PAYMENT_PAGE_LOGO" type="text" size="40" class="inputbox"
+								label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_LOGO" 
+								description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_LOGO_DESC" 
+								default="" 
+								filter="safehtml" /> 
+							<field name="PAYMENT_PAGE_FONT" type="bixlist" class="inputbox" size="1" multiple="false"
+								   label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_FONT"
+								   description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_FONT_DESC"
+								   default="Arial">
+								<option value="Arial">Arial</option>
+								<option value="Times">Times</option>
+							</field>
+							<field name="PAYMENT_PAGE_BGCOLOR" type="color"
+								class="inputbox" label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_BGCOLOR"
+								description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_BGCOLOR_DESC" />
+							<field name="PAYMENT_PAGE_TBLCOLOR" type="color"
+								class="inputbox" label="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_TBLCOLOR"
+								description="COM_BIXPRINTSHOP_CONFIG_BETALEN_IDEAL_PAYMENT_PAGE_TBLCOLOR_DESC" />
+					
+							<field name="GATEWAY_NAME" type="hidden" default="ABN Amro - iDEAL Only" />
+							<field name="GATEWAY_WEBSITE" type="hidden" default="http://www.abnamro.nl/" />
+							<field name="GATEWAY_METHOD" type="hidden" default="ideal-internetkassa" />
+							<field name="GATEWAY_VALIDATION" type="hidden" default="0" />
+						</fields>
+					</fields>
+				</fieldset>
+			</fieldset>
+		</fields>
+	</fields>
+</form>
