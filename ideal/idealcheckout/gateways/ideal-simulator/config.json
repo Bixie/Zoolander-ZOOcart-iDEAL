@@ -1,0 +1,6 @@
+{
+	"GATEWAY_NAME": "iDEAL Simulator - iDEAL",
+	"GATEWAY_WEBSITE": "http://www.ideal-simulator.nl/",
+	"GATEWAY_METHOD": "ideal-simulator",
+	"GATEWAY_VALIDATION": "0"
+}

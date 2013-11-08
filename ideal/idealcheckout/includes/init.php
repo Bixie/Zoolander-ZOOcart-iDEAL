@@ -13,7 +13,7 @@
 	$aIdealCheckout = array();
 
 	//bixie
-	define(JPATH_ROOT,str_replace('/plugins/bixprintshop_betaal/bix_ideal/idealcheckout/includes','',dirname(__FILE__)));
+	// define(JPATH_ROOT,str_replace('/plugins/bixprintshop_betaal/bix_ideal/idealcheckout/includes','',dirname(__FILE__)));
 
 
 

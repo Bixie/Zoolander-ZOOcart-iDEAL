@@ -588,7 +588,7 @@ td
 		// iDEAL Checkout Table
 		if(empty($aSettings['table']))
 		{
-			$aSettings['table'] = $aSettings['prefix'] . 'bps_idealcheckout'; //bixie
+			$aSettings['table'] = $aSettings['prefix'] . 'zoo_zl_zoocart_idealcheckout'; //bixie
 		}
 
 		return $aSettings;

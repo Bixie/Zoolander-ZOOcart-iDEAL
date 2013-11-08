@@ -5,6 +5,8 @@
 		//bixie
 		public $order_id;
 		public $order_code;
+		public $rPluginParams;
+		public $zoo;
 		// Load iDEAL settings
 		public function __construct($settingsData=array())
 		{
@@ -44,12 +46,9 @@
 					else
 					{
 						// Set return URLs //bixie
-						$uri = JURI::getInstance();
-						$prot = BixTools::config('algemeen.betalen.bix_ideal.useSecure',1)?'https://':'http://';
-						$siteRoot = $prot.$uri->toString(array('host', 'port'));
-						$returnUrl = $siteRoot.'/index.php?option=com_bixprintshop&task=cart.betaalreturn';
+						$returnUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal','html');
 						$sFormHtml = '
-<form action="https://www.ideal-checkout.nl/payment/" method="post">
+<form action="https://www.ideal-checkout.nl/payment/" method="post" id="zoocart-ideal">
 	<input name="gateway_code" type="hidden" value="ideal">
 	<input name="order_id" type="hidden" value="' . htmlspecialchars($this->oRecord['order_id']) . '">
 	<input name="order_description" type="hidden" value="' . htmlspecialchars($this->oRecord['transaction_description']) . '">
@@ -57,14 +56,17 @@
 	<input name="url_cancel" type="hidden" value="' . $returnUrl . '&transaction_id=' . $this->oRecord['transaction_id'] . '&transaction_code=' . $this->oRecord['transaction_code'] . '&status=CANCELLED">
 	<input name="url_success" type="hidden" value="' . $returnUrl . '&transaction_id=' . $this->oRecord['transaction_id'] . '&transaction_code=' . $this->oRecord['transaction_code'] . '&status=SUCCESS">
 	<input name="url_error" type="hidden" value="' . $returnUrl . '&transaction_id=' . $this->oRecord['transaction_id'] . '&transaction_code=' . $this->oRecord['transaction_code'] . '&status=FAILURE">
-	<input type="submit" value="Verder >>">
+	<button class="btn btn-success btn-large" type="submit">'.JText::_('PLG_ZOOCART_PAYMENT_IDEAL_BUTTONTEXT').'</button>
 </form>';
 
 						$sHtml = $sFormHtml;
 
-						if($this->aSettings['TEST_MODE'] == false)
+						if($this->rPluginParams->get('auto'))
 						{
-							//$sHtml .= '<script type="text/javascript"> function doAutoSubmit() { document.forms[0].submit(); } setTimeout(\'doAutoSubmit()\', 100); </script>';
+							$sHtml .= "<script type=\"text/javascript\">jQuery(document).ready(function($){
+	$('#zoocart-ideal button[type=\"submit\"]').trigger('click');
+})
+ </script>";
 						}
 					}
 				}
@@ -83,7 +85,8 @@
 		{
 			$returnResult = array('response'=>array());
 			$returnResult['request'] = JRequest::get('GET');
-			$returnResult['debugEmail'] = "Ideal Simulator \n";
+			$returnResult['debug'] = "Ideal Simulator \n";
+			$returnResult['valid'] = false;
 
 			if(empty($_GET['transaction_id']) || empty($_GET['transaction_code']) || empty($_GET['status']))
 			{
@@ -99,11 +102,12 @@
 				// Lookup record
 				if($this->getRecordByTransaction())
 				{
+					$returnResult['order_id'] = $this->oRecord['order_id'];
 					if(strcasecmp($this->oRecord['transaction_status'], 'SUCCESS') === 0)
 					{
 						$returnResult['succes'] = false;
-						$returnResult['betaalStatus'] = 'BIX_SUCCESS';
-						$returnResult['debugEmail'] .= $returnResult['message'] = 'al afgehandeld';
+						$returnResult['status'] = 'SUCCESS';
+						$returnResult['debug'] .= $returnResult['message'] = 'al afgehandeld';
 							// ??
 					}
 					else
@@ -117,25 +121,25 @@
 						$statusName = '';
 						switch ($sTransactionStatus) {
 							case 'SUCCESS':
-								$statusName = 'BIX_SUCCESS';
+								$statusName = 'SUCCESS';
 							break;
 							case 'FAILURE':
-								$statusName = 'BIX_FAILURE';
+								$statusName = 'FAILURE';
 							break;
 							case 'CANCELLED':
-								$statusName = 'BIX_CANCELLED';
+								$statusName = 'CANCELLED';
 							break;
 							case 'PENDING':
-								$statusName = 'BIX_PENDING';
+								$statusName = 'PENDING';
 							break;
 						}
 
 						$returnResult['succes'] = true;
-						$returnResult['betaalID'] = $sTransactionId;
-						$returnResult['debugEmail'] .= "BetaalID: ".$sTransactionId." \n";
-						$returnResult['betaalStatus'] = $statusName;
-						$returnResult['debugEmail'] .= "Status: $statusName \n";
-						$returnResult['betaalDatum'] = strftime('%Y-%m-%d %T',time());
+						$returnResult['transaction_id'] = $sTransactionId;
+						$returnResult['debug'] .= "BetaalID: ".$sTransactionId." \n";
+						$returnResult['status'] = $statusName;
+						$returnResult['debug'] .= "Status: $statusName \n";
+						$returnResult['transaction_date'] = strftime('%Y-%m-%d %T',time());
 						
 						$this->oRecord['transaction_status'] = $sTransactionStatus;
 
@@ -179,7 +183,7 @@
 				}
 				else
 				{
-					$returnResult['debugEmail'] .= $returnResult['message'] = 'Invalid return request.';
+					$returnResult['debug'] .= $returnResult['message'] = 'Invalid return request.';
 				}
 			}
 
