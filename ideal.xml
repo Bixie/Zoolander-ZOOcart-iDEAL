@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="zoocart_payment" method="upgrade" version="2.5.9" zlfw="3.0.12">
+	<name>ZOOcart - iDEAL Payment</name>
+	<author>Matthijs Alles - Bixie</author>
+	<creationDate>November 2013</creationDate>
+	<copyright>Copyright (C) JOOlanders SL/Bixie</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only</license>
+	<authorEmail>info@bixie.nl</authorEmail>
+	<authorUrl>http://www.bixie.nl</authorUrl>
+	<version>3.1 BETA</version>
+	<description>PLG_ZOOCART_PAYMENT_IDEAL_DESCRIPTION</description>
+	<files>
+		<filename plugin="ideal">ideal.php</filename>
+		<folder>tmpl</folder>
+	</files>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/en-GB.plg_zoocart_payment_ideal.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_zoocart_payment_ideal.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field type="text" name="title" default="Ideal" label="PLG_ZOOCART_PAYMENT_IDEAL_TITLE" description="PLG_ZOOCART_PAYMENT_IDEAL_TITLE_DESCR" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>
