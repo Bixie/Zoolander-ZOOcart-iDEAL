@@ -21,16 +21,12 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$this->app->path->register(dirname(__FILE__).'/idealcheckout/gateways','idealgateways');
 		// register classes
 		if ( $path = $this->app->path->path( 'ideal:classes' ) ) {
-	//echo $path = $this->app->path->path( 'ideal:classes' );
 			$this->app->path->register($path, 'classes');
-	// echo $this->app->path->path('classes:idealcheckout.php');
 			$this->app->loader->register('Idealcheckout', 'classes:idealcheckout.php');
 		}
 		// register tables
-	//echo $this->app->path->path( 'ideal:tables/' );
 		if ( $path = $this->app->path->path( 'ideal:tables' ) ) {
 			$this->app->path->register($path, 'tables');
-	// echo $this->app->path->path('tables:idealcheckout.php');
 			$this->app->loader->register('IdealcheckoutTable', 'tables:idealcheckout.php');
 		}
 
@@ -51,7 +47,6 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	}
 	
 	protected function getRenderData($data = array()) {
-
 		//init idealcheckout
 		require_once($this->app->path->path('idealcheckout:includes/init.php'));
 		$data = parent::getRenderData($data);
@@ -75,13 +70,13 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 			'email' => $user->email, 
 			'phone' => '', 
 		);
-
 		$aOrderParams['status'] = array(
 			'success' => 'COMPLETED',
 			'pending' => 'PENDING',
 			'cancelled' => 'FAILED',
 		);
 // $this->app->zoocart->payment->getCallbackUrl('ideal');
+		//create checkout object
 		$idealdata = $this->app->data->create();
 		$idealdata['order_id'] = $data['order']->id;
 		$idealdata['order_code'] = $order_code;
@@ -112,7 +107,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$gatewaySettings = $this->_getGatewaySettings($idealType);
 		//save to database
 		if (!$gatewaySettings || !$this->app->zoocart->table->idealcheckout->save($idealdata)) {
-			//then what?
+			//then what? Can I throw/return error?
 		}
 		//get the gateway
 		$oGateway = new Gateway($gatewaySettings);
@@ -164,8 +159,6 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$oGateway = new Gateway($gatewaySettings);
 		$returnResult = $oGateway->doReturn();
 
-
-
 		$id = (int) $returnResult['order_id'];
 		if($id) {
 			$order = $this->app->zoocart->table->orders->get($id);
@@ -206,10 +199,10 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 						break;
 				}
 			}
-
+			//add a redirect option here??
 			return array('status' => $status, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $order->total);
 		}
-
+		//add a redirect option here??
 		return array('status' => 0, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $mc_gross);
 	}
 	
