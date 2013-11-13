@@ -141,7 +141,8 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	 *         		status: 0 => failed, 1 => success, -1 => pending
 	 *         		transaction_id
 	 *         		order_id,
-	 *         		total
+	 *         		total,
+					redirect: false (default) or internal url
 	 *         )
 	 */
 	public function callback($data = array()) {
@@ -199,11 +200,10 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 						break;
 				}
 			}
-			//add a redirect option here??
-			return array('status' => $status, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $order->total);
+			return array('status' => $status, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $order->total,'redirect'=>$returnResult['redirect']);
 		}
 		//add a redirect option here??
-		return array('status' => 0, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $mc_gross);
+		return array('status' => 0, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $mc_gross,'redirect'=>$returnResult['redirect']);
 	}
 	
 	/**

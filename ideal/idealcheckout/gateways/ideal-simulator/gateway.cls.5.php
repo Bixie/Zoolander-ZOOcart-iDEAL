@@ -46,7 +46,7 @@
 					else
 					{
 						// Set return URLs //bixie
-						$returnUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal','html');
+						$returnUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal');
 						$sFormHtml = '
 <form action="https://www.ideal-checkout.nl/payment/" method="post" id="zoocart-ideal">
 	<input name="gateway_code" type="hidden" value="ideal">
@@ -83,7 +83,7 @@
 		// Catch return
 		public function doReturn()
 		{
-			$returnResult = array('response'=>array());
+			$returnResult = array('response'=>array(),'redirect'=>false);
 			$returnResult['request'] = JRequest::get('GET');
 			$returnResult['debug'] = "Ideal Simulator \n";
 			$returnResult['valid'] = false;
@@ -108,7 +108,7 @@
 						$returnResult['succes'] = false;
 						$returnResult['status'] = 'SUCCESS';
 						$returnResult['debug'] .= $returnResult['message'] = 'al afgehandeld';
-							// ??
+						$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
 					}
 					else
 					{
@@ -153,37 +153,29 @@
 						$this->save();
 
 
-
-						// Handle status change
-						if(function_exists('idealcheckout_update_order_status'))
-						{
-							//idealcheckout_update_order_status($this->oRecord, 'doReturn');
-						}
-
-
 						
 						// Set status message
 						if(strcasecmp($this->oRecord['transaction_status'], 'SUCCESS') === 0)
 						{
 							$returnResult['valid'] = true;
-							//$sHtml .= '<p>Uw betaling is met succes ontvangen.<br><input style="margin: 6px;" type="button" value="Terug naar de website" onclick="javascript: document.location.href = \'' . htmlspecialchars(idealcheckout_getRootUrl(1)) . '\'"></p>';
 						}
 						else
 						{
 							if(strcasecmp($this->oRecord['transaction_status'], 'CANCELLED') === 0){
+								$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
 							}
 						}
 
 						if($this->oRecord['transaction_success_url'] && (strcasecmp($this->oRecord['transaction_status'], 'SUCCESS') === 0))
 						{
-							//header('Location: ' . $this->oRecord['transaction_success_url']);
-							//exit;
+							$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
 						}
 					}
 				}
 				else
 				{
 					$returnResult['debug'] .= $returnResult['message'] = 'Invalid return request.';
+					$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 				}
 			}
 
