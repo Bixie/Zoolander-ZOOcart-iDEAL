@@ -47,10 +47,13 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	}
 	
 	protected function getRenderData($data = array()) {
-		//init idealcheckout
-		require_once($this->app->path->path('idealcheckout:includes/init.php'));
 		$data = parent::getRenderData($data);
 		$this->app = App::getInstance('zoo');
+		//get the gatewaysettings
+		$idealType = $this->params->get('type', 'ideal-simulator');
+		$gatewaySettings = $this->_getGatewaySettings($idealType);
+		//init idealcheckout after gatewaysettings!
+		require_once($this->app->path->path('idealcheckout:includes/init.php'));
 		//sort data
 		$data['test'] = $this->params->get('test', 0);
 		$billing_address_id = $this->app->data->create($data['order']->billing_address)->id;
@@ -99,12 +102,6 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$idealdata['transaction_pending_url'] = $this->app->zoocart->payment->getCancelUrl();
 		$idealdata['transaction_failure_url'] = $this->app->zoocart->payment->getCancelUrl();
 		$idealdata['transaction_log'] = null;
-		//get the gatewaysettings
-		$idealType = $this->params->get('type', 'ideal-simulator');
-		if ($data['test']) {
-			$idealType = 'ideal-simulator';
-		}
-		$gatewaySettings = $this->_getGatewaySettings($idealType);
 		//save to database
 		if (!$gatewaySettings || !$this->app->zoocart->table->idealcheckout->save($idealdata)) {
 			//then what? Can I throw/return error?
@@ -146,17 +143,13 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	 *         )
 	 */
 	public function callback($data = array()) {
-		//init idealcheckout
-		require_once($this->app->path->path('idealcheckout:includes/init.php'));
-
 		$data = $this->app->data->create($data);
 
 		//get the gatewaysettings
 		$idealType = $this->params->get('type', 'ideal-simulator');
-		if ($data['test']) {
-			$idealType = 'ideal-simulator';
-		}
 		$gatewaySettings = $this->_getGatewaySettings($idealType);
+		//init idealcheckout after gatewaysettings!
+		require_once($this->app->path->path('idealcheckout:includes/init.php'));
 		$oGateway = new Gateway($gatewaySettings);
 		$returnResult = $oGateway->doReturn();
 
@@ -215,6 +208,11 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	protected function _getGatewaySettings ($idealType) {
 		if ($file = $this->app->path->path('idealgateways:'.$idealType.'/config.json')) {
 			$gatewaysettings = $this->app->data->create(file_get_contents($file));
+			foreach (array('id1','id2','key1','key2') as $settingKey) {
+				if ($setting = $gatewaysettings->get($settingKey,false)) {
+					$gatewaysettings->set($setting['key'],$this->params->get($settingKey,$setting['default']));
+				}
+			}
 			return $gatewaysettings;
 		}
 		return false;

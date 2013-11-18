@@ -689,18 +689,7 @@ td
 		if (count($settingsData)) {
 			$aSettings = $settingsData;
 		} else {
-			if(file_exists($sConfigFile1) && @is_file($sConfigFile1) && @is_readable($sConfigFile1))
-			{
-				include($sConfigFile1);
-			}
-			elseif(file_exists($sConfigFile2) && @is_file($sConfigFile2) && @is_readable($sConfigFile2))
-			{
-				include($sConfigFile2);
-			}
-			else
-			{
-				idealcheckout_die('ERROR: ' . $sConfigError, __FILE__, __LINE__, false);
-			}
+			idealcheckout_die('ERROR: ' . $sConfigError, __FILE__, __LINE__, false);
 		}
 
 

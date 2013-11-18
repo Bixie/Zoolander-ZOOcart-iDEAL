@@ -37,7 +37,8 @@
 					directory="/plugins/zoocart_payment/ideal/idealcheckout/gateways" 
 					filter="ideal" exclude="" stripext="" hide_default="true" />
 
-				<field type="text" name="PSPID" default="" label="PLG_ZOOCART_PAYMENT_IDEAL_PSPID_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_PSPID_DESCRIPTION" />
+				<field type="text" name="id1" default="" label="PLG_ZOOCART_PAYMENT_IDEAL_PSPID_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_PSPID_DESCRIPTION" />
+				<field type="text" name="id2" default="0" label="PLG_ZOOCART_PAYMENT_IDEAL_SUBID_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_SUBID_DESCRIPTION" />
 				<field type="text" name="key1" default="" label="PLG_ZOOCART_PAYMENT_IDEAL_KEY1_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_KEY1_DESCRIPTION" />
 				<field type="text" name="key2" default="" label="PLG_ZOOCART_PAYMENT_IDEAL_KEY2_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_KEY2_DESCRIPTION" />
 				

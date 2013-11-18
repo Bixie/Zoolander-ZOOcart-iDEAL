@@ -208,7 +208,7 @@
 
 
 	// Load gateway configuration
-	$aIdealCheckout['gateway'] = idealcheckout_getGatewaySettings(false,false,$gatewaySettings);
+	$aIdealCheckout['gateway'] = idealcheckout_getGatewaySettings(false,false,(array)$gatewaySettings);
 
 	if(is_array($aIdealCheckout['gateway']))
 	{
