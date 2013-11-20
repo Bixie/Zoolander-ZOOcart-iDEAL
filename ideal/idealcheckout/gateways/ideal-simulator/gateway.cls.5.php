@@ -92,6 +92,7 @@
 			{
 				$returnResult['succes'] = false;
 				$returnResult['message'] = 'Invalid return request.';
+				$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 			}
 			else
 			{

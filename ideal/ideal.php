@@ -107,10 +107,9 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 			//then what? Can I throw/return error?
 		}
 		//get the gateway
-		$oGateway = new Gateway($gatewaySettings);
+		$oGateway = new Gateway($gatewaySettings,$this->params);
 		$oGateway->order_id = $idealdata['order_id'];
 		$oGateway->order_code = $idealdata['order_code'];
-		$oGateway->rPluginParams = $this->params;
 		$oGateway->zoo = $this->app;
 		$data['formHtml'] = $oGateway->doSetup();
 // echo '<pre>';
@@ -150,8 +149,12 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$gatewaySettings = $this->_getGatewaySettings($idealType);
 		//init idealcheckout after gatewaysettings!
 		require_once($this->app->path->path('idealcheckout:includes/init.php'));
-		$oGateway = new Gateway($gatewaySettings);
-		$returnResult = $oGateway->doReturn();
+		$oGateway = new Gateway($gatewaySettings,$this->params);
+		if (JRequest::getInt('push',0)) {
+			$returnResult = $oGateway->doReport();
+		} else {
+			$returnResult = $oGateway->doReturn();
+		}
 
 		$id = (int) $returnResult['order_id'];
 		if($id) {
@@ -160,42 +163,25 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 			$order = $data->get('order', null);
 		}
 
-		// Check against frauds
-		$valid = $returnResult['succes'];
+		// Checked against frauds in gateway
+		$valid = $returnResult['valid'];
 // echo '<pre>';
 // print_r($order);
 // print_r($returnResult);
 // echo '</pre>';
 		
 		if ($valid) {
-			if($valid) {
-				$valid = (bool) $order->id;
-			}
-			
-			// Check that total is correct not possible in ideal
+			$valid = (bool) $order->id;
+			// Checking total is correct not possible in ideal
 			if (!$valid) {
 				$status = 0;
 			} else {
-				// Check the payment_status
-				switch($returnResult['status']) {
-					case 'PENDING':
-						$status = -1;
-						break;
-					
-					case 'SUCCESS':
-						$status = 1;
-						break;
-					
-					case 'CANCELLED':
-					case 'FAILURE':
-					default:
-						$status = 0;
-						break;
-				}
+				//get the payment_status
+				$status = $returnResult['success'];
 			}
 			return array('status' => $status, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $order->total,'redirect'=>$returnResult['redirect']);
 		}
-		//add a redirect option here??
+		//add a redirect option here
 		return array('status' => 0, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $mc_gross,'redirect'=>$returnResult['redirect']);
 	}
 	
