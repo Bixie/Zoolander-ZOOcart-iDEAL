@@ -165,14 +165,10 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 
 		// Checked against frauds in gateway
 		$valid = $returnResult['valid'];
-// echo '<pre>';
-// print_r($order);
-// print_r($returnResult);
-// echo '</pre>';
 		
 		if ($valid) {
 			$valid = (bool) $order->id;
-			// Checking total is correct not possible in ideal
+			// todo: check multiple crossing payments
 			if (!$valid) {
 				$status = 0;
 			} else {
