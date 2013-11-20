@@ -189,27 +189,22 @@
 
 							$this->oRecord['transaction_log'] .= 'RETURN: Recieved status ' . $this->oRecord['transaction_status'] . ' for #' . $this->oRecord['transaction_id'] . ' on ' . date('Y-m-d, H:i:s') . '.';
 
-							if (strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
-								$returnResult['success'] = 1;
-								$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
-							} elseif (strcmp($this->oRecord['transaction_status'], 'OPEN') === 0) {
-								$returnResult['success'] = -1;
-								$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
-							} else { //fails
-								if (strcmp($this->oRecord['transaction_status'], 'CANCELLED') === 0) {
-									$returnResult['success'] = 0;
-								} elseif (strcmp($this->oRecord['transaction_status'], 'EXPIRED') === 0) {
-									$returnResult['success'] = 0;
-								} else {// if (strcmp($this->oRecord['transaction_status'], 'FAILURE') === 0)
-									$returnResult['success'] = 0;
-								}
-
-
-								if ($this->oRecord['transaction_payment_url']) {
+							switch ($this->oRecord['transaction_status']) {
+								case 'SUCCESS':
+									$returnResult['success'] = 1;
+									$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
+								break;
+								case 'OPEN':
+									$returnResult['success'] = -1;
 									$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
-								} elseif ($this->oRecord['transaction_failure_url']) {
-									$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
-								}
+								break;
+								case 'CANCELLED':
+								case 'EXPIRED':
+								case 'FAILURE':
+								default:
+									$returnResult['success'] = 0;
+									$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
+								break;
 							}
 
 
@@ -287,18 +282,22 @@
 
 							$this->oRecord['transaction_log'] .= 'REPORT: Recieved status ' . $this->oRecord['transaction_status'] . ' for #' . $this->oRecord['transaction_id'] . ' on ' . date('Y-m-d, H:i:s') . '.';
 
-							if (strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
-								$returnResult['success'] = 1;
-							} elseif ((strcmp($this->oRecord['transaction_status'], 'OPEN') === 0) && !empty($this->oRecord['transaction_url'])) {
-								$returnResult['success'] = -1;
-							} else {
-								if (strcmp($this->oRecord['transaction_status'], 'CANCELLED') === 0) {
+							switch ($this->oRecord['transaction_status']) {
+								case 'SUCCESS':
+									$returnResult['success'] = 1;
+									$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
+								break;
+								case 'OPEN':
+									$returnResult['success'] = -1;
+									$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
+								break;
+								case 'CANCELLED':
+								case 'EXPIRED':
+								case 'FAILURE':
+								default:
 									$returnResult['success'] = 0;
-								} elseif (strcmp($this->oRecord['transaction_status'], 'EXPIRED') === 0) {
-									$returnResult['success'] = 0;
-								} else {// if (strcmp($this->oRecord['transaction_status'], 'FAILURE') === 0)
-									$returnResult['success'] = 0;
-								}
+									$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
+								break;
 							}
 
 							// Update transaction
