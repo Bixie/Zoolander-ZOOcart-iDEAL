@@ -142,6 +142,7 @@
 
 			$returnResult = array(
 				'valid'=>false,
+				'order_id'=>0,
 				'transaction_id'=>'',
 				'transaction_date'=>'',
 				'status'=>'',
@@ -166,7 +167,7 @@
 
 					if (idealcheckout_database_num_rows($oRecordset)) {
 						$this->oRecord = idealcheckout_database_fetch_assoc($oRecordset);
-
+						$returnResult['order_id'] = $this->oRecord['order_id'];
 						if (strcmp(preg_replace('/[^a-zA-Z0-9]+/', '', $aIdealCheckout['record']['order_id']), $aOmniKassaResponse['order_id']) !== 0) {
 							$returnResult['message'] = 'Invalid orderid.';
 							$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
@@ -259,6 +260,7 @@
 
 					if (idealcheckout_database_num_rows($oRecordset)) {
 						$this->oRecord = idealcheckout_database_fetch_assoc($oRecordset);
+						$returnResult['order_id'] = $this->oRecord['order_id'];
 
 						if (strcmp(preg_replace('/[^a-zA-Z0-9]+/', '', $aIdealCheckout['record']['order_id']), $aOmniKassaResponse['order_id']) !== 0) {
 							$returnResult['message'] = 'Invalid orderid.';
