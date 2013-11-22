@@ -11,7 +11,8 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 	$zoo = App::getInstance('zoo');
-	$link = $zoo->link(array('controller' => 'orders', 'task' => 'view', 'id' => $order->id));
+	$app_id = $params->get('application', ($zoo->zoo->getApplication() ? $zoo->zoo->getApplication()->id : null));
+	$link = $zoo->link(array('controller' => 'orders', 'task' => 'view', 'id' => $order->id, 'app_id' => $app_id));
 ?>
 
 <div class="zoocart-container">
