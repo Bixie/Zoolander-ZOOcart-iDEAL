@@ -11,7 +11,8 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 	$zoo = App::getInstance('zoo');
-	$app_id = $params->get('application', ($zoo->zoo->getApplication() ? $zoo->zoo->getApplication()->id : null));
+	$app_id = $zoo->request->get('app_id', 'integer', null);
+	$app_id = !$app_id && $zoo->zoo->getApplication() ? $zoo->zoo->getApplication()->id : '';
 	$link = $zoo->link(array('controller' => 'orders', 'task' => 'view', 'id' => $order->id, 'app_id' => $app_id));
 ?>
 
