@@ -15,4 +15,10 @@ echo JText::_('PLG_ZOOCART_PAYMENT_IDEAL_ORDER_PLACED');
 
 echo $formHtml;
 
-?>
+if($auto): ?>
+<script type="text/javascript">
+jQuery(document).ready(function($){
+	$('#zoocart-ideal input[type="submit"]').trigger('click');
+})
+</script>
+<?php endif;

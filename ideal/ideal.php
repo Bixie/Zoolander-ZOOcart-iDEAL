@@ -56,6 +56,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		require_once($this->app->path->path('idealcheckout:includes/init.php'));
 		//sort data
 		$data['test'] = $this->params->get('test', 0);
+		$data['auto'] = $this->params->get('auto', 0);
 		$billing_address_id = $this->app->data->create($data['order']->billing_address)->id;
 		$billing_address = $this->app->zoocart->table->addresses->get((int)$billing_address_id);
 		$user = JFactory::getUser($data['order']->user_id);

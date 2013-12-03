@@ -215,7 +215,7 @@
 
 
 			// Generate HTML form
-			$html = '<form method="post" action="' . htmlspecialchars($this->sAquirerUrl) . '"><input type="hidden" name="Data" value="' . htmlspecialchars($sData) . '"><input type="hidden" name="InterfaceVersion" value="HP_1.0"><input type="hidden" name="Seal" value="' . htmlspecialchars($sHash) . '">' . ($this->sButtonImage ? '<input type="image" value="' . htmlspecialchars($this->sButtonLabel) . '" src="' . htmlspecialchars($this->sButtonImage) . '"' . ($this->iButtonImageWidth ? ' width="' . htmlspecialchars($this->iButtonImageWidth) . '"' : '') . ($this->iButtonImageHeight ? ' height="' . htmlspecialchars($this->iButtonImageHeight) . '"' : '') . '>' : '<input type="submit" value="' . htmlspecialchars($this->sButtonLabel) . '">') . '</form>';
+			$html = '<form id="zoocart-ideal" method="post" action="' . htmlspecialchars($this->sAquirerUrl) . '"><input type="hidden" name="Data" value="' . htmlspecialchars($sData) . '"><input type="hidden" name="InterfaceVersion" value="HP_1.0"><input type="hidden" name="Seal" value="' . htmlspecialchars($sHash) . '">' . ($this->sButtonImage ? '<input type="image" value="' . htmlspecialchars($this->sButtonLabel) . '" src="' . htmlspecialchars($this->sButtonImage) . '"' . ($this->iButtonImageWidth ? ' width="' . htmlspecialchars($this->iButtonImageWidth) . '"' : '') . ($this->iButtonImageHeight ? ' height="' . htmlspecialchars($this->iButtonImageHeight) . '"' : '') . '>' : '<input type="submit" value="' . htmlspecialchars($this->sButtonLabel) . '">') . '</form>';
 			return $html;
 		}
 

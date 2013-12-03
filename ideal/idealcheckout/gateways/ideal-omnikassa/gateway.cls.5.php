@@ -56,7 +56,7 @@
 						}
 
 						$oOmniKassa->setMerchant($this->aSettings['MERCHANT_ID'], $this->aSettings['SUB_ID']);
-						$oOmniKassa->setAquirer($this->aSettings['GATEWAY_NAME'], $this->aSettings['TEST_MODE']);
+						$oOmniKassa->setAquirer($this->aSettings['GATEWAY_NAME'], $this->rPluginParams->get('test',0));
 
 						if (!empty($this->oRecord['language_code']))
 						{
