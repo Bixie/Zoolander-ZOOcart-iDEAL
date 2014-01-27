@@ -1,0 +1,23 @@
+{
+	"id1" :{
+		"key":"MERCHANT_ID",
+		"default":""
+	},
+	"id2": {
+		"key":"SUB_ID",
+		"default":"0"
+	},
+	"key1": {
+		"key":"HASH_KEY",
+		"default":""
+	},
+	"key2": {
+		"key":"KEY_VERSION",
+		"default":"1"
+	},
+	"TEST_MODE": "1",
+	"GATEWAY_NAME": "Rabo OmniKassa - iDEAL",
+	"GATEWAY_WEBSITE": "http://www.rabobank.nl/",
+	"GATEWAY_METHOD": "ideal-omnikassa",
+	"GATEWAY_VALIDATION": "0"
+}

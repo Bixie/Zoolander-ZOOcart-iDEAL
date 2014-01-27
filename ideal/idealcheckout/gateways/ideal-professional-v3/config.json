@@ -1,0 +1,29 @@
+{
+	"id1" :{
+		"key":"MERCHANT_ID",
+		"default":""
+	},
+	"id2": {
+		"key":"SUB_ID",
+		"default":"0"
+	},
+	"key1": {
+		"key":"PRIVATE_KEY_PASS",
+		"default":""
+	},
+	"key2": {
+		"key":"PRIVATE_KEY_FILE",
+		"default":"1"
+	},
+	"key3": {
+		"key":"PRIVATE_CERTIFICATE_FILE",
+		"default":"1"
+	},
+	"TEST_MODE": "1",
+	"GATEWAY_NAME": "ING Bank - iDEAL Advanced",
+	"GATEWAY_WEBSITE": "http://www.ingbank.nl/",
+	"GATEWAY_METHOD": "ideal-professional-v3",
+	"GATEWAY_VALIDATION": "1"
+}
+
+

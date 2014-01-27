@@ -1,13 +1,18 @@
 <?php
 
-	class Gateway extends GatewayCore
-	{
+	class Gateway extends GatewayCore {
+		
+		//bixie
+		public $order_id;
+		public $order_code;
+		public $rPluginParams;
+		public $zoo;
+		
 		// Load iDEAL settings
-		public function __construct()
-		{
-			$this->init();
+		public function __construct($settingsData=array(),$rPluginParams) {
+			$this->init($settingsData);
+			$this->rPluginParams = $rPluginParams;
 		}
-
 		
 		// Setup payment
 		public function doSetup()
@@ -17,18 +22,18 @@
 			$sHtml = '';
 
 			// Look for proper GET's en POST's
-			if(empty($_GET['order_id']) || empty($_GET['order_code']))
+			if (!isset($this->order_id) || !isset($this->order_code)) //bixie
 			{
 				$sHtml .= '<p>Invalid transaction request.</p>';
 			}
 			else
 			{
-				$sOrderId = $_GET['order_id'];
-				$sOrderCode = $_GET['order_code'];
-
+				//bixie
+				$sOrderId = $this->order_id;
+				$sOrderCode = $this->order_code;
 
 				// Lookup transaction
-				if($this->getRecordByOrder())
+				if ($this->getRecordByOrder($sOrderId,$sOrderCode)) //bixie
 				{
 					if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0)
 					{
@@ -102,7 +107,13 @@
 
 						$sHtml .= '
 <form action="' . htmlspecialchars(idealcheckout_getRootUrl() . 'transaction.php?order_id=' . $sOrderId . '&order_code=' . $sOrderCode) . '" method="post" id="checkout">
-	<p><b>Kies uw bank</b><br><select name="issuer_id" style="margin: 6px; width: 200px;">' . $sIssuerList . '</select><br><input type="submit" value="Verder"></p>.
+	<div><em>Kies uw bank</em><br/><select name="issuer_id">' . $sIssuerList . '</select>
+		<div class="zoocart-checkout-buttons uk-nbfc">
+			<button type="button" class="uk-button uk-button-success uk-float-right button-checkout">
+				<i class="uk-icon-shopping-cart"></i>&nbsp;&nbsp;&nbsp;'.JText::_('PLG_ZOOCART_CHECKOUT').'
+			</button>
+		</div>
+	</div>
 </form>';
 					}
 				}
@@ -112,7 +123,7 @@
 				}
 			}
 
-			idealcheckout_output($sHtml);
+			return $sHtml;
 		}
 
 
