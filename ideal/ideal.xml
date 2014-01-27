@@ -41,6 +41,7 @@
 				<field type="text" name="id2" default="0" label="PLG_ZOOCART_PAYMENT_IDEAL_SUBID_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_SUBID_DESCRIPTION" />
 				<field type="text" name="key1" default="" label="PLG_ZOOCART_PAYMENT_IDEAL_KEY1_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_KEY1_DESCRIPTION" />
 				<field type="text" name="key2" default="" label="PLG_ZOOCART_PAYMENT_IDEAL_KEY2_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_KEY2_DESCRIPTION" />
+				<field type="text" name="key3" default="" label="PLG_ZOOCART_PAYMENT_IDEAL_KEY3_LABEL" description="PLG_ZOOCART_PAYMENT_IDEAL_KEY3_DESCRIPTION" />
 				
 				<field type="spacer" name="spacer2" hr="true"/>
 
