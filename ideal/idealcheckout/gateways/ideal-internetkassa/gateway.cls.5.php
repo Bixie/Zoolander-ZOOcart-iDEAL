@@ -7,13 +7,12 @@
 		public $order_code;
 		public $issuerID;
 		// Load iDEAL settings
-		public function __construct($settingsData=array())
-		{
+		public function __construct($settingsData=array(),$rPluginParams) {
 			$this->init($settingsData);
+			$this->rPluginParams = $rPluginParams;
 		}
 
-		public function doSetup()
-		{
+		public function doSetup() {
 			$sHtml = '';
 
 			// Look for proper GET's en POST's

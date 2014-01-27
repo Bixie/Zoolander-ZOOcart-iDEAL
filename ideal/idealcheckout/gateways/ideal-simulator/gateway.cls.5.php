@@ -8,9 +8,9 @@
 		public $rPluginParams;
 		public $zoo;
 		// Load iDEAL settings
-		public function __construct($settingsData=array())
-		{
+		public function __construct($settingsData=array(),$rPluginParams) {
 			$this->init($settingsData);
+			$this->rPluginParams = $rPluginParams;
 		}
 		
 		// Setup payment
