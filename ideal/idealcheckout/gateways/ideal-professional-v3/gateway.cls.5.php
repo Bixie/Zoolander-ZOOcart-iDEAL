@@ -53,6 +53,7 @@
 						$oIssuerRequest->setMerchant($this->aSettings['MERCHANT_ID'], $this->aSettings['SUB_ID']);
 						$oIssuerRequest->setAquirer($this->aSettings['GATEWAY_NAME'], $this->aSettings['TEST_MODE']);
 
+						$actionUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal','html').'&transaction=1&order_id=' . $sOrderId . '&order_code=' . $sOrderCode;
 						
 						$aIssuerList = $oIssuerRequest->doRequest();
 						$sIssuerList = '';
@@ -61,7 +62,7 @@
 						{
 							if($this->aSettings['TEST_MODE'])
 							{
-								idealcheckout_output('<code>' . var_export($oIssuerRequest->getErrors(), true) . '</code>');
+								return '<pre>' . var_export($oIssuerRequest->getErrors(), true) . '</pre>';
 							}
 							else
 							{
@@ -75,7 +76,7 @@
 								$this->oRecord['transaction_log'] .= 'Executing IssuerRequest on ' . date('Y-m-d, H:i:s') . '. Recieved: ERROR' . "\n" . var_export($oIssuerRequest->getErrors(), true);
 								$this->save();
 
-								$sHtml = '<p>Door een technische storing kunnen er momenteel helaas geen betalingen via iDEAL worden verwerkt. Onze excuses voor het ongemak.</p>';
+								$sHtml .= '<p>Door een technische storing kunnen er momenteel helaas geen betalingen via iDEAL worden verwerkt. Onze excuses voor het ongemak.</p>';
 								
 								if($this->oRecord['transaction_payment_url'])
 								{
@@ -86,7 +87,7 @@
 									$sHtml .= '<p><a href="' . htmlentities($this->oRecord['transaction_failure_url']) . '">terug naar de website</a></p>';
 								}
 								
-								idealcheckout_output($sHtml);
+								return $sHtml;
 							}
 						}
 
@@ -106,14 +107,17 @@
 						}
 
 						$sHtml .= '
-<form action="' . htmlspecialchars(idealcheckout_getRootUrl() . 'transaction.php?order_id=' . $sOrderId . '&order_code=' . $sOrderCode) . '" method="post" id="checkout">
-	<div><em>Kies uw bank</em><br/><select name="issuer_id">' . $sIssuerList . '</select>
+<form action="' . htmlspecialchars($actionUrl) . '" method="post" id="checkout" class="uk-form">
+	<fieldset>
+		<legend>'.JText::_('PLG_ZOOCART_PAYMENT_IDEAL_CHOOSE_BANK').'</legend>
+		<div class="uk-form-formrow"><select name="issuer_id">' . $sIssuerList . '</select></div>
 		<div class="zoocart-checkout-buttons uk-nbfc">
-			<button type="button" class="uk-button uk-button-success uk-float-right button-checkout">
+			<button class="uk-button uk-button-success uk-float-right">
 				<i class="uk-icon-shopping-cart"></i>&nbsp;&nbsp;&nbsp;'.JText::_('PLG_ZOOCART_CHECKOUT').'
 			</button>
 		</div>
-	</div>
+		
+	</fieldset>
 </form>';
 					}
 				}
@@ -130,7 +134,19 @@
 		// Execute payment
 		public function doTransaction()
 		{
-			$sHtml = '';
+			$returnResult = array(
+				'valid'=>true,
+				'order_id'=>0,
+				'transaction_id'=>'',
+				'transaction_date'=>'',
+				'message'=>'',
+				'success'=>-1,
+				'redirect'=>false,
+				'messageStyle'=>'',
+				'formHtml'=>''
+			);
+			
+			$returnResult['message'] = '';
 
 			if(empty($_POST['issuer_id']))
 			{
@@ -143,7 +159,8 @@
 			// Look for proper GET's en POST's
 			if(empty($_POST['issuer_id']) || empty($_GET['order_id']) || empty($_GET['order_code']))
 			{
-				$sHtml .= '<p>Invalid transaction request.</p>';
+				$returnResult['message'] .= '<p>Invalid transaction request.</p>';
+				$returnResult['messageStyle'] = 'uk-alert-danger';
 			}
 			else
 			{
@@ -156,12 +173,16 @@
 				{
 					if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0)
 					{
-						$sHtml .= '<p>Transaction already completed</p>';
+						$returnResult['transaction_id'] = $this->oRecord['transaction_id'];
+						$returnResult['transaction_date'] = JHtml::_('date',$this->oRecord['transaction_date'],'Y-m-d H:i:s');;
+						$returnResult['message'] .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_ALREADY_COMPLETE');
+						$returnResult['messageStyle'] = 'uk-alert-success';
 					}
 					elseif((strcmp($this->oRecord['transaction_status'], 'OPEN') === 0) && !empty($this->oRecord['transaction_url']))
 					{
-						header('Location: ' . $this->oRecord['transaction_url']);
-						exit;
+						$returnResult['message'] .= '<p>'.JText::_('PLG_ZOOCART_PAYMENT_IDEAL_BEING_REDIRECTED').'</p>';
+						$returnResult['formHtml'] = '<script>setTimeout(function(){document.location.href=\''.$this->oRecord['transaction_url'].'\'},500)();</script>';
+						return $returnResult;
 					}
 					else
 					{
@@ -178,7 +199,8 @@
 
 						$oTransactionRequest->setIssuerId($sIssuerId);
 						$oTransactionRequest->setEntranceCode($this->oRecord['transaction_code']);
-						$oTransactionRequest->setReturnUrl(idealcheckout_getRootUrl() . 'return.php');
+						$returnUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal');
+						$oTransactionRequest->setReturnUrl(htmlentities($returnUrl));
 
 
 						// Find TransactionID
@@ -188,7 +210,8 @@
 						{
 							if($this->aSettings['TEST_MODE'])
 							{
-								idealcheckout_output('<code>' . var_export($oTransactionRequest->getErrors(), true) . '</code>');
+								$returnResult['formHtml'] = '<pre>' . var_export($oTransactionRequest->getErrors(), true) . '</pre>';
+								return $returnResult;
 							}
 							else
 							{
@@ -202,24 +225,25 @@
 								$this->oRecord['transaction_log'] .= 'Executing TransactionRequest on ' . date('Y-m-d, H:i:s') . '. Recieved: ERROR' . "\n" . var_export($oTransactionRequest->getErrors(), true);
 								$this->save();
 
-								$sHtml = '<p>Door een technische storing kunnen er momenteel helaas geen betalingen via iDEAL worden verwerkt. Onze excuses voor het ongemak.</p>';
+								$returnResult['message'] = '<p>Door een technische storing kunnen er momenteel helaas geen betalingen via iDEAL worden verwerkt. Onze excuses voor het ongemak.</p>';
 								
 								if($this->oRecord['transaction_payment_url'])
 								{
-									$sHtml .= '<p><a href="' . htmlentities($this->oRecord['transaction_payment_url']) . '">kies een andere betaalmethode</a></p>';
+									$returnResult['message'] .= '<p><a href="' . htmlentities($this->oRecord['transaction_payment_url']) . '">kies een andere betaalmethode</a></p>';
 								}
 								elseif($this->oRecord['transaction_failure_url'])
 								{
-									$sHtml .= '<p><a href="' . htmlentities($this->oRecord['transaction_failure_url']) . '">terug naar de website</a></p>';
+									$returnResult['message'] .= '<p><a href="' . htmlentities($this->oRecord['transaction_failure_url']) . '">terug naar de website</a></p>';
 								}
 
-								$sHtml .= '<!--
+								$returnResult['message'] .= '<!--
 
 ' . var_export($oTransactionRequest->getErrors(), true) . '
 
 -->';
+								$returnResult['messageStyle'] = 'uk-alert-danger';
 								
-								idealcheckout_output($sHtml);
+								return $returnResult;
 							}
 						}
 
@@ -238,52 +262,72 @@
 
 						$this->save();
 						
-						// idealcheckout_die('<a href="' . $oTransactionRequest->getTransactionUrl() . '">' . $oTransactionRequest->getTransactionUrl() . '</a>', __FILE__, __LINE__);
-						$oTransactionRequest->doTransaction();
+						$returnResult['transaction_id'] = $sTransactionId;
+						$returnResult['transaction_date'] = JHtml::_('date','now','Y-m-d H:i:s');;
+						$returnResult['message'] .= '<p>'.JText::_('PLG_ZOOCART_PAYMENT_IDEAL_BEING_REDIRECTED').'</p>';
+						$returnResult['formHtml'] = '<a href="'.$this->oRecord['transaction_url'].'">'.JText::_('PLG_ZOOCART_PAYMENT_IDEAL_CLICKTOPAY').'</a>';
+						$returnResult['formHtml'] .= '<script>setTimeout(function(){document.location.href=\''.$this->oRecord['transaction_url'].'\'},500)();</script>';
 					}
 				}
 				else
 				{
-					$sHtml .= '<p>Invalid transaction request.</p>';
+					$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
+					$returnResult['messageStyle'] = 'uk-alert-danger';
 				}
 			}
 
-			idealcheckout_output($sHtml);
+			return $returnResult;
 		}
 
 
-		// Catch return
-		public function doReturn()
-		{
-			$sHtml = '';
+		/**
+		 * catch return
+		 *
+		 * @return array(
+		 *         		valid: true/false, 
+		 *         		transaction_id
+		 *         		transaction_date,
+		 *         		status,
+		 *         		success: 0 => failed, 1 => success, -1 => pending,
+		 *				redirect: false (default) or internal url
+		 *         )
+		 */
+		public function doReturn() {
+			$returnResult = array(
+				'valid'=>false,
+				'order_id'=>0,
+				'transaction_id'=>'',
+				'transaction_date'=>'',
+				'status'=>'',
+				'message'=>'',
+				'success'=>0,
+				'redirect'=>false,
+				'messageStyle'=>'',
+				'formHtml'=>''
+			);
+			
 
-			if(empty($_GET['trxid']) || empty($_GET['ec']))
-			{
-				$sHtml .= '<p>Invalid return request.</p>';
-			}
-			else
-			{
+			if(empty($_GET['trxid']) || empty($_GET['ec']))	{
+				$returnResult['valid'] = false;
+				$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
+				$returnResult['messageStyle'] = 'uk-alert-danger';
+				$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
+			} else {
 				$sTransactionId = $_GET['trxid'];
 				$sTransactionCode = $_GET['ec'];
 
 				// Lookup record
-				if($this->getRecordByTransaction())
-				{
+				if($this->getRecordByTransaction()) {
+					$returnResult['valid'] = true;
+					$returnResult['order_id'] = $this->oRecord['order_id'];
 					// Transaction already finished
-					if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0)
-					{
-						if($this->oRecord['transaction_success_url'])
-						{
-							header('Location: ' . $this->oRecord['transaction_success_url']);
-							exit;
-						}
-						else
-						{
-							$sHtml .= '<p>Uw betaling is met succes ontvangen.<br><input style="margin: 6px;" type="button" value="Terug naar de website" onclick="javascript: document.location.href = \'' . htmlspecialchars(idealcheckout_getRootUrl(1)) . '\'"></p>';
-						}
-					}
-					else
-					{
+					if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
+						$returnResult['success'] = 1;
+						$returnResult['status'] = 'SUCCESS';
+						$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_ALREADY_COMPLETE');;
+						$returnResult['messageStyle'] = 'uk-alert-success';
+						$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
+					} else { 
 						// Check status
 						$oStatusRequest = new StatusRequest();
 						$oStatusRequest->setSecurePath($this->aSettings['CERTIFICATE_PATH']);
@@ -295,15 +339,18 @@
 						$oStatusRequest->setTransactionId($sTransactionId);
 
 						$this->oRecord['transaction_status'] = $oStatusRequest->doRequest();
-
-						if($oStatusRequest->hasErrors())
-						{
-							if($this->aSettings['TEST_MODE'])
-							{
-								idealcheckout_output('<code>' . var_export($oStatusRequest->getErrors(), true) . '</code>');
-							}
-							else
-							{
+						//valid new request
+						$returnResult['valid'] = true;
+						$returnResult['transaction_id'] = $this->oRecord['transaction_id'];
+						$returnResult['status'] = $this->oRecord['transaction_status'];
+						$returnResult['transaction_date'] = JHtml::_('date','now','Y-m-d H:i:s');
+						//return errors
+						if($oStatusRequest->hasErrors()) {
+							$returnResult['success'] = 0;
+							if($this->aSettings['TEST_MODE']) {
+								$returnResult['message'] = '<pre>' . var_export($oStatusRequest->getErrors(), true) . '</pre>';
+								return $returnResult;
+							} else {
 								$this->oRecord['transaction_status'] = 'FAILURE';
 
 								if(empty($this->oRecord['transaction_log']) == false)
@@ -314,27 +361,18 @@
 								$this->oRecord['transaction_log'] .= 'Executing StatusRequest on ' . date('Y-m-d, H:i:s') . '. Recieved: ERROR' . "\n" . var_export($oStatusRequest->getErrors(), true);
 								$this->save();
 
-								$sHtml = '<p>Door een technische storing kunnen er momenteel helaas geen betalingen via iDEAL worden verwerkt. Onze excuses voor het ongemak.</p>';
+								$sHtml = '<div>Door een technische storing kunnen er momenteel helaas geen betalingen via iDEAL worden verwerkt. Onze excuses voor het ongemak.</div>';
 								
-								if($this->oRecord['transaction_payment_url'])
-								{
-									$sHtml .= '<p><a href="' . htmlentities($this->oRecord['transaction_payment_url']) . '">kies een andere betaalmethode</a></p>';
-								}
-								elseif($this->oRecord['transaction_failure_url'])
-								{
-									$sHtml .= '<p><a href="' . htmlentities($this->oRecord['transaction_failure_url']) . '">terug naar de website</a></p>';
-								}
-
 								$sHtml .= '<!--
 
 ' . var_export($oStatusRequest->getErrors(), true) . '
 
 -->';
-
-								idealcheckout_output($sHtml);
+								$returnResult['message'] = $sHtml;
+								return $returnResult;
 							}
 						}
-
+						//log valid
 						if(empty($this->oRecord['transaction_log']) == false)
 						{
 							$this->oRecord['transaction_log'] .= "\n\n";
@@ -344,66 +382,39 @@
 
 						$this->save();
 
-
-
-						// Handle status change
-						if(function_exists('idealcheckout_update_order_status'))
-						{
-							idealcheckout_update_order_status($this->oRecord, 'doReturn');
-						}
-
-
-
-						// Set status message
-						if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0)
-						{
-							$sHtml .= '<p>Uw betaling is met succes ontvangen.' . ($this->oRecord['transaction_success_url'] ? '<br><input style="margin: 6px;" type="button" value="Verder" onclick="javascript: document.location.href = \'' . htmlspecialchars($this->oRecord['transaction_success_url']) . '\'">' : '') . '</p>';
-						}
-						elseif((strcmp($this->oRecord['transaction_status'], 'OPEN') === 0) && !empty($this->oRecord['transaction_url']))
-						{
-							$sHtml .= '<p>Uw betaling is nog niet afgerond.' . ($this->oRecord['transaction_url'] ? '<br><input style="margin: 6px;" type="button" value="Verder" onclick="javascript: document.location.href = \'' . htmlspecialchars($this->oRecord['transaction_url']) . '\'">' : '') . '</p>';
-						}
-						else
-						{
-							if(strcasecmp($this->oRecord['transaction_status'], 'CANCELLED') === 0)
-							{
-								$sHtml .= '<p>Uw betaling is geannuleerd. Probeer opnieuw te betalen.<br><input style="margin: 6px;" type="button" value="Verder" onclick="javascript: document.location.href = \'' . htmlspecialchars(idealcheckout_getRootUrl() . 'setup.php?order_id=' . $this->oRecord['order_id'] . '&order_code=' . $this->oRecord['order_code']) . '\'"></p>';
-							}
-							elseif(strcasecmp($this->oRecord['transaction_status'], 'EXPIRED') === 0)
-							{
-								$sHtml .= '<p>Uw betaling is mislukt. Probeer opnieuw te betalen.<br><input style="margin: 6px;" type="button" value="Verder" onclick="javascript: document.location.href = \'' . htmlspecialchars(idealcheckout_getRootUrl() . 'setup.php?order_id=' . $this->oRecord['order_id'] . '&order_code=' . $this->oRecord['order_code']) . '\'"></p>';
-							}
-							else // if(strcasecmp($this->oRecord['transaction_status'], 'FAILURE') === 0)
-							{
-								$sHtml .= '<p>Uw betaling is mislukt. Probeer opnieuw te betalen.<br><input style="margin: 6px;" type="button" value="Verder" onclick="javascript: document.location.href = \'' . htmlspecialchars(idealcheckout_getRootUrl() . 'setup.php?order_id=' . $this->oRecord['order_id'] . '&order_code=' . $this->oRecord['order_code']) . '\'"></p>';
-							}
-
-
-							if($this->oRecord['transaction_payment_url'])
-							{
-								$sHtml .= '<p><a href="' . htmlentities($this->oRecord['transaction_payment_url']) . '">kies een andere betaalmethode</a></p>';
-							}
-							elseif($this->oRecord['transaction_failure_url'])
-							{
-								$sHtml .= '<p><a href="' . htmlentities($this->oRecord['transaction_failure_url']) . '">ik kan nu niet betalen via deze betaalmethode</a></p>';
-							}
-						}
-
-
-						if($this->oRecord['transaction_success_url'] && (strcasecmp($this->oRecord['transaction_status'], 'SUCCESS') === 0))
-						{
-							header('Location: ' . $this->oRecord['transaction_success_url']);
-							exit;
+						//get status
+						switch ($this->oRecord['transaction_status']) {
+							case 'SUCCESS':
+								$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_SUCCESS');
+								$returnResult['messageStyle'] = 'uk-alert-success';
+								$returnResult['success'] = 1;
+								$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
+							break;
+							case 'OPEN':
+								$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_PENDING');
+								$returnResult['messageStyle'] = 'uk-alert-warning';
+								$returnResult['success'] = -1;
+								$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
+							break;
+							case 'CANCELLED':
+							case 'EXPIRED':
+							case 'FAILURE':
+							default:
+								$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_FAILED');
+								$returnResult['messageStyle'] = 'uk-alert-danger';
+								$returnResult['success'] = 0;
+								$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
+							break;
 						}
 					}
-				}
-				else
-				{
-					$sHtml .= '<p>Invalid return request.</p>';
+				} else {
+					$returnResult['valid'] = false;
+					$returnResult['message'] = 'Invalid return request.';
+					$returnResult['messageStyle'] = 'uk-alert-danger';
+					$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 				}
 			}
-
-			idealcheckout_output($sHtml);
+			return $returnResult;
 		}
 
 
@@ -415,6 +426,7 @@
 
 
 		// Validate all open transactions
+		// TODO make this accessable from admin
 		public function doValidate()
 		{
 			global $aIdealCheckout; 
@@ -476,8 +488,7 @@
 				$sHtml .= '<br>Er zijn geen openstaande transacties gevonden.';
 			}
 
-			idealcheckout_output('<p>' . $sHtml . '</p><p>&nbsp;</p><p><input type="button" value="Venster sluiten" onclick="javascript: window.close();"></p>');
+			return $sHtml;
 		}
 	}
 
-?>
