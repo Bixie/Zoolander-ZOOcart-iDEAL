@@ -148,12 +148,15 @@
 				'status'=>'',
 				'message'=>'',
 				'success'=>0,
-				'redirect'=>false
+				'redirect'=>false,
+				'messageStyle'=>'',
+				'formHtml'=>''
 			);
 			
 			if (empty($_POST['Data']) || empty($_POST['Seal'])) {
 				$returnResult['valid'] = false;
-				$returnResult['message'] = 'Invalid return request.';
+				$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
+				$returnResult['messageStyle'] = 'uk-alert-danger';
 				$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 			} else {
 				$oOmniKassa = new OmniKassa('ideal');
@@ -170,11 +173,14 @@
 						$returnResult['order_id'] = $this->oRecord['order_id'];
 						if (strcmp(preg_replace('/[^a-zA-Z0-9]+/', '', $aIdealCheckout['record']['order_id']), $aOmniKassaResponse['order_id']) !== 0) {
 							$returnResult['message'] = 'Invalid orderid.';
+							$returnResult['messageStyle'] = 'uk-alert-danger';
 							$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 						} elseif (false && strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
+							$returnResult['valid'] = true;
 							$returnResult['success'] = 1;
 							$returnResult['status'] = 'SUCCESS';
-							$returnResult['message'] = 'Al afgehandeld';
+							$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_ALREADY_COMPLETE');;
+							$returnResult['messageStyle'] = 'uk-alert-success';
 							$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
 						} else { //valid new request
 							$returnResult['valid'] = true;
@@ -192,10 +198,14 @@
 
 							switch ($this->oRecord['transaction_status']) {
 								case 'SUCCESS':
+									$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_SUCCESS');
+									$returnResult['messageStyle'] = 'uk-alert-success';
 									$returnResult['success'] = 1;
 									$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
 								break;
 								case 'OPEN':
+									$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_PENDING');
+									$returnResult['messageStyle'] = 'uk-alert-warning';
 									$returnResult['success'] = -1;
 									$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
 								break;
@@ -203,6 +213,8 @@
 								case 'EXPIRED':
 								case 'FAILURE':
 								default:
+									$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_FAILED');
+									$returnResult['messageStyle'] = 'uk-alert-danger';
 									$returnResult['success'] = 0;
 									$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
 								break;
@@ -216,14 +228,15 @@
 						}
 					} else {
 						$returnResult['message'] = 'Invalid return request: db-record not found';
+						$returnResult['messageStyle'] = 'uk-alert-danger';
 						$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 					}
 				} else {
 					$returnResult['message'] = 'Invalid response data.';
+					$returnResult['messageStyle'] = 'uk-alert-danger';
 					$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 				}
 			}
-
 			return $returnResult;
 		}
 
@@ -240,7 +253,9 @@
 				'status'=>'',
 				'message'=>'',
 				'success'=>0,
-				'redirect'=>false
+				'redirect'=>false,
+				'messageStyle'=>'',
+				'formHtml'=>''
 			);
 			
 			
@@ -318,5 +333,3 @@
 			return $returnResult;
 		}
 	}
-
-?>
