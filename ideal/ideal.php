@@ -113,12 +113,24 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$oGateway->order_code = $idealdata['order_code'];
 		$oGateway->zoo = $this->app;
 		$data['formHtml'] = $oGateway->doSetup();
-// echo '<pre>';
-// print_r($idealdata);
-// print_r($this->params);
-// echo '</pre>'.htmlspecialchars($data['formHtml']);
 
 		return $data;
+	}
+
+	public function message($data = array()) {
+		$html = '';
+		$app = App::getInstance('zoo');
+		$message = $this->app->session->get('com_zoo.zoocart.payment_ideal.message','');
+		$messageStyle = $this->app->session->get('com_zoo.zoocart.payment_ideal.messageStyle','');
+		$formHtml = $this->app->session->get('com_zoo.zoocart.payment_ideal.formHtml','');
+		if ($message || $formHtml) {
+			if ($message) $html .= '<div class="uk-alert '.$messageStyle.'"><a href="" class="uk-alert-close uk-close"></a>'.$message.'</div>';
+			if ($formHtml) $html .= '<div class="uk-form">'.$formHtml.'</div>';
+			$this->app->session->set('com_zoo.zoocart.payment_ideal.message',null);
+			$this->app->session->set('com_zoo.zoocart.payment_ideal.messageStyle',null);
+			$this->app->session->set('com_zoo.zoocart.payment_ideal.formHtml',null);
+		}
+		return $html;
 	}
 
 	public function render($data = array()) {
@@ -144,18 +156,25 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	 */
 	public function callback($data = array()) {
 		$data = $this->app->data->create($data);
-
 		//get the gatewaysettings
 		$idealType = $this->params->get('type', 'ideal-simulator');
 		$gatewaySettings = $this->_getGatewaySettings($idealType);
 		//init idealcheckout after gatewaysettings!
 		require_once($this->app->path->path('idealcheckout:includes/init.php'));
 		$oGateway = new Gateway($gatewaySettings,$this->params);
+		$oGateway->zoo = $this->app;
+		//type of callback
 		if (JRequest::getInt('push',0)) {
 			$returnResult = $oGateway->doReport();
+		} elseif (JRequest::getInt('transaction',0)) {
+			$returnResult = $oGateway->doTransaction();
 		} else {
 			$returnResult = $oGateway->doReturn();
 		}
+		$this->app->session->set('com_zoo.zoocart.payment_ideal.message',$returnResult['message']);
+		$this->app->session->set('com_zoo.zoocart.payment_ideal.messageStyle',$returnResult['messageStyle']);
+		$this->app->session->set('com_zoo.zoocart.payment_ideal.formHtml',$returnResult['formHtml']);
+		//	echo $oGateway->doValidate(); //TODO lookup transactions in admin?
 
 		$id = (int) $returnResult['order_id'];
 		if($id) {
@@ -176,15 +195,10 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 				//get the payment_status
 				$status = $returnResult['success'];
 			}
-	// echo '<pre>'.$status.$order->id;
-	// print_r($order);
-	// print_r($returnResult);
-	// echo '</pre>';
-	// $returnResult['redirect'] = false;
 			return array('status' => $status, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $order->total,'redirect'=>$returnResult['redirect']);
 		}
 		//add a redirect option here
-		return array('status' => 0, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $mc_gross,'redirect'=>$returnResult['redirect']);
+		return array('status' => 0, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => 0,'redirect'=>$returnResult['redirect']);
 	}
 	
 	/**
