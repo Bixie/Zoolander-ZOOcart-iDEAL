@@ -10,5 +10,3 @@
 	$aSettings['GATEWAY_WEBSITE'] = 'http://www.ideal-simulator.nl/';
 	$aSettings['GATEWAY_METHOD'] = 'ideal-simulator';
 	$aSettings['GATEWAY_VALIDATION'] = false;
-
-?>

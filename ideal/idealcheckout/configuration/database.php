@@ -24,7 +24,3 @@ if (file_exists(JPATH_ROOT . '/configuration.php')) {
 	$aSettings['type'] = 'mysqli';
 }
 
-
-
-
-?>
