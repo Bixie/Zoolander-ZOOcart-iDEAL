@@ -124,7 +124,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$messageStyle = $this->app->session->get('com_zoo.zoocart.payment_ideal.messageStyle','');
 		$formHtml = $this->app->session->get('com_zoo.zoocart.payment_ideal.formHtml','');
 		if ($message || $formHtml) {
-			if ($message) $html .= '<div class="uk-alert '.$messageStyle.'"><a href="" class="uk-alert-close uk-close"></a>'.$message.'</div>';
+			if ($message) $html .= '<div class="uk-alert uk-alert-large '.$messageStyle.'" data-uk-alert><a href="" class="uk-alert-close uk-close"></a>'.$message.'</div>';
 			if ($formHtml) $html .= '<div class="uk-form">'.$formHtml.'</div>';
 			$this->app->session->set('com_zoo.zoocart.payment_ideal.message',null);
 			$this->app->session->set('com_zoo.zoocart.payment_ideal.messageStyle',null);
@@ -209,13 +209,13 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	 */
 	protected function _getGatewaySettings ($idealType) {
 		if ($file = $this->app->path->path('idealgateways:'.$idealType.'/config.json')) {
-			$gatewaysettings = $this->app->data->create(file_get_contents($file));
+			$gatewaySettings = $this->app->data->create(file_get_contents($file));
 			foreach (array('id1','id2','key1','key2','key3') as $settingKey) {
-				if ($setting = $gatewaysettings->get($settingKey,false)) {
-					$gatewaysettings->set($setting['key'],$this->params->get($settingKey,@$setting['default']));
+				if ($setting = $gatewaySettings->get($settingKey,false)) {
+					$gatewaySettings->set($setting['key'],$this->params->get($settingKey,@$setting['default']));
 				}
 			}
-			return $gatewaysettings;
+			return $gatewaySettings;
 		}
 		return false;
 	}
