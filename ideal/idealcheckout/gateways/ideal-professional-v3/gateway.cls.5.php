@@ -24,7 +24,7 @@
 			// Look for proper GET's en POST's
 			if (!isset($this->order_id) || !isset($this->order_code)) //bixie
 			{
-				$sHtml .= '<p>Invalid transaction request.</p>';
+				$sHtml .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
 			}
 			else
 			{
@@ -37,7 +37,7 @@
 				{
 					if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0)
 					{
-						$sHtml .= '<p>Transaction already completed</p>';
+						$sHtml .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_ALREADY_COMPLETE');
 					}
 					elseif((strcmp($this->oRecord['transaction_status'], 'OPEN') === 0) && !empty($this->oRecord['transaction_url']))
 					{
@@ -159,7 +159,7 @@
 			// Look for proper GET's en POST's
 			if(empty($_POST['issuer_id']) || empty($_GET['order_id']) || empty($_GET['order_code']))
 			{
-				$returnResult['message'] .= '<p>Invalid transaction request.</p>';
+				$returnResult['message'] .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
 				$returnResult['messageStyle'] = 'uk-alert-danger';
 			}
 			else

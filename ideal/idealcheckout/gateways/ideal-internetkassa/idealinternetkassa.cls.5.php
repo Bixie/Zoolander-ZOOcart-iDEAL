@@ -80,7 +80,7 @@
 
 
 			$html = '
-<form method="post" action="' . $this->getActionUrl() . '" id="ogone" name="ogone">
+<form method="post" action="' . $this->getActionUrl() . '" id="ogone" name="ogone" style="uk-form">
 	<input type="hidden" name="SHASIGN" value="' . htmlspecialchars($sHash) . '">';
 
 			foreach($this->aShaIn as $k)
@@ -93,7 +93,7 @@
 			}
 
 			$html .= '
-	<input type="submit" value="' . htmlspecialchars($sSubmitLabel) . '">
+	<input type="submit" class="uk-button" value="' . htmlspecialchars($sSubmitLabel) . '">
 </form>';
 
 			return $html;

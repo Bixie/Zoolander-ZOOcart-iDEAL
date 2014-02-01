@@ -25,6 +25,7 @@ _ideal-professional-v3_
 * Key 3: Name of your PRIVATE-CERTIFICATE-FILE (should be located in `/plugins/zoocart_payment/ideal/idealcheckout/certificates`!)
 
 Don't use the auto-submit option, because the user has to select his bank first.
+For more info on config on bank-side, see the [readme](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/tree/master/ideal/idealcheckout/gateways/ideal-professional-v3) in gateway folder (Dutch).
 
 ###ABN iDEAL Easy
 _ideal-easy_
@@ -34,5 +35,12 @@ Only merchantID is required. Keys unused.
 **This is not a valid or secure payment method! The result of the payment in the website is only a indication!**
 **Confirmation of the payment can only come from the bank directly via dashboard or mail.**
 
+###ABN Internetkassa
+_ideal-internetkassa_
+* Key 1: SHA1 IN key
+* Key 2: SHA1 OUT key
+* Key 3: unused
+
+For more info on config on bank-side, see the [readme](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/tree/master/ideal/idealcheckout/gateways/ideal-internetkassa) in gateway folder (Dutch).
 
 ----
