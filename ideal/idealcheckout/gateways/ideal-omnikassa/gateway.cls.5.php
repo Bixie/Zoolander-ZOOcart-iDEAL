@@ -136,8 +136,7 @@
 		 *				redirect: false (default) or internal url
 		 *         )
 		 */
-		public function doReturn()
-		{
+		public function doReturn() {
 			global $aIdealCheckout; 
 
 			$returnResult = array(
