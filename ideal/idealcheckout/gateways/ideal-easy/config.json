@@ -7,17 +7,9 @@
 		"key":"SUB_ID",
 		"default":"0"
 	},
-	"key1": {
-		"key":"HASH_KEY",
-		"default":""
-	},
-	"key2": {
-		"key":"KEY_VERSION",
-		"default":"1"
-	},
-	"TEST_MODE": "1",
-	"GATEWAY_NAME": "Rabo OmniKassa - iDEAL",
-	"GATEWAY_WEBSITE": "http://www.rabobank.nl/",
-	"GATEWAY_METHOD": "ideal-omnikassa",
+	"TEST_MODE": "0",
+	"GATEWAY_NAME": "ABN AMRO - iDEAL Easy",
+	"GATEWAY_WEBSITE": "http://www.abnamro.nl/",
+	"GATEWAY_METHOD": "ideal-easy",
 	"GATEWAY_VALIDATION": "0"
 }

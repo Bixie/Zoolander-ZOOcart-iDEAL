@@ -28,7 +28,7 @@
 			// Look for proper GET's en POST's
 			if (!isset($this->order_id) || !isset($this->order_code)) //bixie
 			{
-				$sHtml .= '<p>' . idealcheckout_getTranslation($this->oRecord['language_code'], 'idealcheckout', 'Invalid setup request.') . '</p>';
+				$sHtml .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
 			}
 			else
 			{
@@ -41,7 +41,7 @@
 				{
 					if (strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0)
 					{
-						$sHtml .= '<p>' . idealcheckout_getTranslation($this->oRecord['language_code'], 'idealcheckout', 'Transaction already completed.') . '</p>';
+						$sHtml .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_ALREADY_COMPLETE');
 					}
 					else
 					{
@@ -103,7 +103,7 @@
 
 
 						// Customize submit button
-						$oOmniKassa->setButton('' . idealcheckout_getTranslation($this->oRecord['language_code'], 'idealcheckout', 'Continue') . ' >>');
+						$oOmniKassa->setButton(JText::_('PLG_ZOOCART_PAYMENT_IDEAL_BUTTONTEXT'));
 
 						$sHtml = $oOmniKassa->createForm();
 
@@ -116,7 +116,7 @@
 				}
 				else
 				{
-					$sHtml .= '<p>' . idealcheckout_getTranslation($this->oRecord['language_code'], 'idealcheckout', 'Invalid  request.') . '</p>';
+					$sHtml .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
 				}
 			}
 

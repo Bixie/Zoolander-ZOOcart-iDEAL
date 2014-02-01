@@ -27,6 +27,7 @@
 		protected $fOrderAmount = 0.00;
 		protected $sOrderId = '';
 		protected $sOrderDescription = '';
+		protected $sReturnUrl = '';
 
 
 		// Customer settings - probably used to autofill creditcard data (available for iDEAL Kassa), but ignored for iDEAL Easy
@@ -75,6 +76,11 @@
 			$this->bTestMode = $bTestMode;
 		}
 
+		function setReturnUrl($sReturnUrl)
+		{
+			$this->sReturnUrl = $sReturnUrl;
+		}
+
 		// Upto 32 characters
 		public function setOrderDescription($sOrderDescription)
 		{
@@ -106,12 +112,9 @@
 			// Generate HTML form
 			$HTTP_REFERER = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], '/'))) . '://' . $_SERVER['HTTP_HOST'] . '/';
 			// Set return URLs //bixie
-			$uri = JURI::getInstance();
-			$prot = BixTools::config('algemeen.betalen.bix_ideal.useSecure',1)?'https://':'http://';
-			$siteRoot = $prot.$uri->toString(array('host', 'port'));
-			$returnUrl = $siteRoot.'/index.php?option=com_bixprintshop&task=cart.betaalreturn';
-
-			$html = '<form action="' . $this->escapeHtml($sFormUrl) . '" method="post">'
+			$siteRoot = JURI::root();
+			
+			$html = '<form action="' . $this->escapeHtml($sFormUrl) . '" method="post" class="uk-form">'
 			. '<input name="HTTP_REFERER" type="hidden" value="' . $this->escapeHtml($HTTP_REFERER) . '">'
 			. '<input type="hidden" name="PSPID" value="' . $this->sMerchantId . '">'
 			. '<input type="hidden" name="orderID" value="' . $this->escapeHtml($this->sOrderId) . '">'
@@ -126,16 +129,14 @@
 			. '<input type="hidden" name="ownertown" value="' . $this->escapeHtml($this->sCustomerCity) . '">' // Customer City, optional
 			. '<input type="hidden" name="ownerzip" value="' . $this->escapeHtml($this->sCustomerZip) . '">' // Customer Postalcode, optional
 			
-			.'<input type="hidden" name="cancelurl" value="'.$returnUrl. '&order_id=' . $this->oRecord['order_id'] . '&order_code=' . $this->oRecord['order_code'] . '&status=CANCELLED'.'">'
-			.'<input type="hidden" name="declineurl" value="'.$returnUrl. '&order_id=' . $this->oRecord['order_id'] . '&order_code=' . $this->oRecord['order_code'] . '&status=CANCELLED'.'">'
-			.'<input type="hidden" name="exceptionurl" value="'.$returnUrl. '&order_id=' . $this->oRecord['order_id'] . '&order_code=' . $this->oRecord['order_code'] . '&status=CANCELLED'.'">'
-			.'<input type="hidden" name="accepturl" value="'.$returnUrl.'">'
+			.'<input type="hidden" name="cancelurl" value="'.$this->sReturnUrl. '&status=CANCELLED">'
+			.'<input type="hidden" name="declineurl" value="'.$this->sReturnUrl. '&status=CANCELLED">'
+			.'<input type="hidden" name="exceptionurl" value="'.$this->sReturnUrl . '&status=FAILURE">'
+			.'<input type="hidden" name="accepturl" value="'.$this->sReturnUrl.'&status=SUCCESS">'
 			.'<input type="hidden" name="homeurl" value="'.$siteRoot.'">'
 			
 			
-			
-			
-			. ($this->sButtonImage ? '<input type="image" value="' . $this->escapeHtml($this->sButtonLabel) . '" src="' . $this->escapeHtml($this->sButtonImage) . '"' . ($this->iButtonImageWidth ? ' width="' . $this->escapeHtml($this->iButtonImageWidth) . '"' : '') . ($this->iButtonImageHeight ? ' height="' . $this->escapeHtml($this->iButtonImageHeight) . '"' : '') . '>' : '<input type="submit" value="' . $this->escapeHtml($this->sButtonLabel) . '">')
+			. ($this->sButtonImage ? '<input type="image" value="' . $this->escapeHtml($this->sButtonLabel) . '" src="' . $this->escapeHtml($this->sButtonImage) . '"' . ($this->iButtonImageWidth ? ' width="' . $this->escapeHtml($this->iButtonImageWidth) . '"' : '') . ($this->iButtonImageHeight ? ' height="' . $this->escapeHtml($this->iButtonImageHeight) . '"' : '') . '>' : '<input type="submit" class="uk-button" value="' . $this->escapeHtml($this->sButtonLabel) . '">')
 			. '</form>';
 
 			return $html;
