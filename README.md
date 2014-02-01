@@ -4,6 +4,8 @@ Payment engine for ZOOlanders ZOOcart by www.zoolanders.com.
 
 Thanks to www.ideal-checkout.nl, whose engine is integrated in this plugin.
 
+Questions and bug-reports via [issues](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/issues) on GitHub.
+
 ----
 At the moment only the Omnikassa (eg. Rabo) and Ideal professional (eg. ING) are active. iDEAL easy en iDEAL-internetkassa from ABN-AMRO are semi-prepared. Other gateways have to be prepared for this plugin.
 Preparing a gateway is just a matter of copying the adjustments made to the Omnikassa.
@@ -41,5 +43,5 @@ _ideal-internetkassa_
 * Key 3: unused
 
 For more info on config on bank-side, see the [readme](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/tree/master/ideal/idealcheckout/gateways/ideal-internetkassa) in gateway folder (Dutch).
-
+This method is not properly tested yet. if you test it and it works, please let me know. If it doesn't work, please create an [issue](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/issues).
 ----
