@@ -25,7 +25,6 @@ _ideal-professional-v3_
 * Key 3: Name of your PRIVATE-CERTIFICATE-FILE (should be located in `/plugins/zoocart_payment/ideal/idealcheckout/certificates`!)
 
 Don't use the auto-submit option, because the user has to select his bank first.
-For more info on config on bank-side, see the [readme](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/tree/master/ideal/idealcheckout/gateways/ideal-professional-v3) in gateway folder (Dutch).
 
 ###ABN iDEAL Easy
 _ideal-easy_
