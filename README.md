@@ -44,4 +44,6 @@ _ideal-internetkassa_
 
 For more info on config on bank-side, see the [readme](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/tree/master/ideal/idealcheckout/gateways/ideal-internetkassa) in gateway folder (Dutch).
 This method is not properly tested yet. if you test it and it works, please let me know. If it doesn't work, please create an [issue](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/issues).
+
+
 ----
