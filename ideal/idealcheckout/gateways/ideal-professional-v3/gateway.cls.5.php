@@ -167,7 +167,8 @@
 				$sIssuerId = $_POST['issuer_id'];
 				$sOrderId = $_GET['order_id'];
 				$sOrderCode = $_GET['order_code'];
-
+				
+				$returnResult['order_id'] = $sOrderId;
 				// Lookup transaction
 				if($this->getRecordByOrder())
 				{
