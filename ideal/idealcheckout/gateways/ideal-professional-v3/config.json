@@ -19,7 +19,10 @@
 		"key":"PRIVATE_CERTIFICATE_FILE",
 		"default":"1"
 	},
-	"TEST_MODE": "1",
+	"test": {
+		"key":"TEST_MODE",
+		"default":"1"
+	},
 	"GATEWAY_NAME": "ING Bank - iDEAL Advanced",
 	"GATEWAY_WEBSITE": "http://www.ingbank.nl/",
 	"GATEWAY_METHOD": "ideal-professional-v3",

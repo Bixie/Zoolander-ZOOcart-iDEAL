@@ -210,9 +210,12 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	protected function _getGatewaySettings ($idealType) {
 		if ($file = $this->app->path->path('idealgateways:'.$idealType.'/config.json')) {
 			$gatewaySettings = $this->app->data->create(file_get_contents($file));
-			foreach (array('id1','id2','key1','key2','key3') as $settingKey) {
+			foreach (array('id1','id2','key1','key2','key3','test') as $settingKey) {
 				if ($setting = $gatewaySettings->get($settingKey,false)) {
-					$gatewaySettings->set($setting['key'],$this->params->get($settingKey,@$setting['default']));
+					$gatewaySettings->set($setting['key'],$this->params->get($settingKey,null));
+					if ($gatewaySettings->get($setting['key'],null) === null) {
+						$gatewaySettings->set($setting['key'],@$setting['default']);
+					}
 				}
 			}
 			return $gatewaySettings;

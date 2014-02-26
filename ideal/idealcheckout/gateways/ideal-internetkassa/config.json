@@ -15,7 +15,10 @@
 		"key":"SHA_1_OUT",
 		"default":"1"
 	},
-	"TEST_MODE": "1",
+	"test": {
+		"key":"TEST_MODE",
+		"default":"1"
+	},
 	"GATEWAY_NAME": "ABN Amro - iDEAL Internet Kassa",
 	"GATEWAY_WEBSITE": "http://www.abnamro.nl/",
 	"GATEWAY_METHOD": "ideal-internetkassa",

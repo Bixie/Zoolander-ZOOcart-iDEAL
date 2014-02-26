@@ -15,7 +15,10 @@
 		"key":"KEY_VERSION",
 		"default":"1"
 	},
-	"TEST_MODE": "1",
+	"test": {
+		"key":"TEST_MODE",
+		"default":"1"
+	},
 	"GATEWAY_NAME": "Rabo OmniKassa - iDEAL",
 	"GATEWAY_WEBSITE": "http://www.rabobank.nl/",
 	"GATEWAY_METHOD": "ideal-omnikassa",
