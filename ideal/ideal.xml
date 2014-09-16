@@ -19,11 +19,11 @@
 		<folder>classes</folder>
 		<folder>tmpl</folder>
 	</files>
-	<languages folder="language">
-		<language tag="en-GB">en-GB/en-GB.plg_zoocart_payment_ideal.ini</language>
-		<language tag="en-GB">en-GB/en-GB.plg_zoocart_payment_ideal.sys.ini</language>
-		<language tag="nl-NL">nl-NL/nl-NL.plg_zoocart_payment_ideal.ini</language>
-		<language tag="nl-NL">nl-NL/nl-NL.plg_zoocart_payment_ideal.sys.ini</language>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.plg_zoocart_payment_ideal.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_zoocart_payment_ideal.sys.ini</language>
+		<language tag="nl-NL">language/nl-NL/nl-NL.plg_zoocart_payment_ideal.ini</language>
+		<language tag="nl-NL">language/nl-NL/nl-NL.plg_zoocart_payment_ideal.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
