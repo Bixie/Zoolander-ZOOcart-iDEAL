@@ -15,6 +15,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.idea/
 
 # External tool builders
 .externalToolBuilders/
@@ -213,3 +214,4 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+ideal/language/nl-NL/nl-NL.plg_system_zoocart.ini
