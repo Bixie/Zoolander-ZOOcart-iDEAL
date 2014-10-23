@@ -14,8 +14,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 
 	public function __construct(&$subject, $config = array()) {
 		parent::__construct($subject, $config);
-		// Get the ZOO App instance
-		$this->app = App::getInstance('zoo');
+
 		$this->app->path->register(dirname(__FILE__),'ideal');
 		$this->app->path->register(dirname(__FILE__).'/idealcheckout','idealcheckout');
 		$this->app->path->register(dirname(__FILE__).'/idealcheckout/gateways','idealgateways');
@@ -45,10 +44,9 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 
 		return (float) $this->params->get('fee', 0);
 	}
-	
+
 	protected function getRenderData($data = array()) {
 		$data = parent::getRenderData($data);
-		$this->app = App::getInstance('zoo');
 		//get the gatewaysettings
 		$idealType = $this->params->get('type', 'ideal-simulator');
 		$gatewaySettings = $this->_getGatewaySettings($idealType);
