@@ -162,7 +162,7 @@
 			if($sTransactionStatus === false) {
 				$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
 				$returnResult['messageStyle'] = 'uk-alert-danger';
-				$returnResult['success'] = 0;
+				$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_FAILED;
 				$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
 			} else {
 				$sOrderId = $oIdeal->getValue('ORDERID');
@@ -173,7 +173,7 @@
 					$returnResult['transaction_id'] = $sTransactionId;
 					if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
 						$returnResult['valid'] = true;
-						$returnResult['success'] = 1;
+						$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_PAYED;
 						$returnResult['status'] = 'SUCCESS';
 						$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_ALREADY_COMPLETE');;
 						$returnResult['messageStyle'] = 'uk-alert-success';
@@ -189,13 +189,13 @@
 							case 'SUCCESS':
 								$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_SUCCESS');
 								$returnResult['messageStyle'] = 'uk-alert-success';
-								$returnResult['success'] = 1;
+								$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_PAYED;
 								$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
 							break;
 							case 'OPEN':
 								$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_PENDING');
 								$returnResult['messageStyle'] = 'uk-alert-warning';
-								$returnResult['success'] = -1;
+								$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_PENDING;
 								$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
 							break;
 							case 'CANCELLED':
@@ -204,7 +204,7 @@
 							default:
 								$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_FAILED');
 								$returnResult['messageStyle'] = 'uk-alert-danger';
-								$returnResult['success'] = 0;
+								$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_FAILED;
 								$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
 							break;
 						}

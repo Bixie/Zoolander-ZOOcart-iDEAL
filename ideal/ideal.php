@@ -180,15 +180,15 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		} else {
 			$order = $data->get('order', null);
 		}
-		$status = 0;
+		$status = JPaymentDriver::ZC_PAYMENT_FAILED;
 		// Checked against frauds in gateway
 		$valid = $returnResult['valid'];
-		
+
 		if ($valid) {
 			$valid = $order->id > 0;
 			// todo: check multiple crossing payments
 			if (!$valid) {
-				$status = 0;
+				$status = JPaymentDriver::ZC_PAYMENT_FAILED;
 			} else {
 				//get the payment_status
 				$status = $returnResult['success'];
@@ -196,7 +196,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 			return array('status' => $status, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => $order->total,'redirect'=>$returnResult['redirect']);
 		}
 		//add a redirect option here
-		return array('status' => 0, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => 0,'redirect'=>$returnResult['redirect']);
+		return array('status' => $status, 'transaction_id' => $returnResult['transaction_id'], 'order_id' => $order->id, 'total' => 0,'redirect'=>$returnResult['redirect']);
 	}
 	
 	/**
