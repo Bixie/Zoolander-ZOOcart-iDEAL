@@ -103,7 +103,7 @@
 				'messageStyle'=>'',
 				'formHtml'=>''
 			);
-			
+
 			$returnResult['transaction_date'] = JHtml::_('date','now','Y-m-d H:i:s');
 
 			if(!empty($_GET['order_id']) && !empty($_GET['order_code']) && !empty($_GET['status'])) { // Cancelled
@@ -113,6 +113,7 @@
 
 				if($this->getRecordByOrder($sOrderId, $sOrderCode)) {
 					$returnResult['valid'] = true;
+					$returnResult['order_id'] = $this->oRecord['order_id'];
 					$returnResult['transaction_id'] = $this->oRecord['transaction_id'];
 					if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
 						$returnResult['success'] = 1;
@@ -171,8 +172,9 @@
 				// Lookup record
 				if($this->getRecordByOrder($sOrderId)) {
 					$returnResult['transaction_id'] = $sTransactionId;
+					$returnResult['valid'] = true;
+					$returnResult['order_id'] = $this->oRecord['order_id'];
 					if(strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
-						$returnResult['valid'] = true;
 						$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_PAYED;
 						$returnResult['status'] = 'SUCCESS';
 						$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_ALREADY_COMPLETE');;
