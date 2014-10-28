@@ -6,7 +6,7 @@ Thanks to www.ideal-checkout.nl, whose engine is integrated in this plugin.
 
 Questions and bug-reports via [issues](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/issues) on GitHub.
 
-*This plugin is not supported by or affiliated with ideal-checkout.nl. Support and questions only via this repository*
+_This plugin is not supported by or affiliated with ideal-checkout.nl. Support and questions only via this repository_
 ----
 
 ##Settings
