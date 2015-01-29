@@ -149,7 +149,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	 *         		transaction_id
 	 *         		order_id,
 	 *         		total,
-					redirect: false (default) or internal url
+	 * 			redirect: false (default) or internal url
 	 *         )
 	 */
 	public function callback($data = array()) {
