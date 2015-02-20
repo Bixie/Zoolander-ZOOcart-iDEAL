@@ -162,9 +162,9 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$oGateway = new Gateway($gatewaySettings,$this->params);
 		$oGateway->zoo = $this->app;
 		//type of callback
-		if (JRequest::getInt('push',0)) {
+		if ($this->app->request->get('push',0)) {
 			$returnResult = $oGateway->doReport();
-		} elseif (JRequest::getInt('transaction',0)) {
+		} elseif ($this->app->request->get('transaction',0)) {
 			$returnResult = $oGateway->doTransaction();
 		} else {
 			$returnResult = $oGateway->doReturn();
