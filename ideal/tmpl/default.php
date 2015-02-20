@@ -9,16 +9,15 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
-
-echo JText::_('PLG_ZOOCART_PAYMENT_IDEAL_ORDER_PLACED');
-
-
+?>
+<p><?php echo JText::_('PLG_ZOOCART_PAYMENT_IDEAL_ORDER_PLACED'); ?></p>
+<?php
 echo $formHtml;
 
 if($auto): ?>
 <script type="text/javascript">
 jQuery(document).ready(function($){
-	$('#zoocart-ideal input[type="submit"]').trigger('click');
+	$('#zoocart-ideal [type="submit"]').trigger('click');
 })
 </script>
 <?php endif;
