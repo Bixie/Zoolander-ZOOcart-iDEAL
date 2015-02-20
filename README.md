@@ -15,10 +15,10 @@ __This plugin is not supported by or affiliated with ideal-checkout.nl. [Support
 ##Settings
 
 Each gateway has its own settings. To make it uniform in the settings the fields key 1 through 3 are used. For more info on configuring the iDEAL settings, see www.ideal-checkout.nl.
-Listed below are the converted gateways. The gateways in the folder `disabled` have not yet been converted. Check the git-history on how to convert a gateway. I you have, please create a PR to merge it back in to the plugin.
+Listed below are the converted gateways. The gateways in the folder `/ideal/idealcheckout/gateways/disabled` have not yet been converted. Check the git-history on how to convert a gateway. I you have, please create a PR to merge it back in to the plugin.
 
 ###Rabo Omnikassa
-_ideal-omnikassa_
+_`/ideal/idealcheckout/gateways/ideal-omnikassa`_
 
 * Id 1: PSPID (Obtained from bank)
 * Id 2: SubID (usually 0)
@@ -27,7 +27,7 @@ _ideal-omnikassa_
 * Key 3: unused
 
 ###ING Advanced
-_ideal-professional-v3_
+_`/ideal/idealcheckout/gateways/ideal-professional-v3_
 
 * Id 1: PSPID (Obtained from bank)
 * Id 2: SubID (usually 0)
@@ -38,7 +38,7 @@ _ideal-professional-v3_
 Don't use the auto-submit option, because the user has to select his bank first.
 
 ###ABN iDEAL Easy
-_ideal-easy_
+_`/ideal/idealcheckout/gateways/ideal-easy`_
 
 * Id 1: PSPID (Obtained from bank)
 Only merchantID is required. Keys unused.
@@ -47,7 +47,7 @@ Only merchantID is required. Keys unused.
 **Confirmation of the payment can only come from the bank directly via dashboard or mail.**
 
 ###ABN Internetkassa
-_ideal-internetkassa_
+_`/ideal/idealcheckout/gateways/ideal-internetkassa`_
 
 * Id 1: PSPID (Obtained from bank)
 * Id 2: SubID (usually 0)
@@ -59,7 +59,7 @@ For more info on config on bank-side, see the [readme](https://github.com/Bixie/
 This method has not been properly tested yet. If you test it and it works, please let me know. If it doesn't work, please create an [issue](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/issues).
 
 ###Mollie
-_ideal-mollie_
+_`/ideal/idealcheckout/gateways/ideal-mollie`_
 
 * Id 1: Partner ID (Obtained from Mollie.)
 * Id 2: Profiel ID/KEY (Obtained from Mollie. _Let op: Dit is NIET je wachtwoord, maar een uniek ID om verschillende websites/webshops via 1 Mollie account te kunnen beheren. Maak je geen gebruik van verschillende profielen, dan kun je dit veld leeg laten)_
@@ -70,7 +70,7 @@ _ideal-mollie_
 Don't use the auto-submit option, because the user has to select his bank first.
 
 ###Sisow
-_ideal-s+isow_
+_`/ideal/idealcheckout/gateways/ideal-sisow`_
 
 * Id 1: Merchant ID
 * Id 2: Merchant KEY
