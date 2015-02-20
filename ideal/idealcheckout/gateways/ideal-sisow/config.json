@@ -1,0 +1,22 @@
+{
+	"id1" :{
+		"key":"MERCHANT_ID",
+		"default":""
+	},
+	"id2": {
+		"key":"MERCHANT_KEY",
+		"default":""
+	},
+	"key1": {
+		"key":"SHOP_ID",
+		"default":""
+	},
+	"test": {
+		"key":"TEST_MODE",
+		"default":"1"
+	},
+	"GATEWAY_NAME": "Sisow - iDEAL",
+	"GATEWAY_WEBSITE": "http://www.sisow.nl/",
+	"GATEWAY_METHOD": "ideal-sisow",
+	"GATEWAY_VALIDATION": "1"
+}
