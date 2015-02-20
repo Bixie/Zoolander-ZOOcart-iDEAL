@@ -1,0 +1,26 @@
+{
+	"id1" :{
+		"key":"PARTNER_ID",
+		"default":""
+	},
+	"id2": {
+		"key":"PROFILE_KEY",
+		"default":""
+	},
+	"key1": {
+		"key":"HASH_KEY",
+		"default":""
+	},
+	"key2": {
+		"key":"KEY_VERSION",
+		"default":"1"
+	},
+	"test": {
+		"key":"TEST_MODE",
+		"default":"1"
+	},
+	"GATEWAY_NAME": "Mollie - iDEAL",
+	"GATEWAY_WEBSITE": "http://www.mollie.nl/",
+	"GATEWAY_METHOD": "ideal-mollie",
+	"GATEWAY_VALIDATION": "1"
+}

@@ -1,7 +1,7 @@
 <?php
 /*-----------------------------------------------------------------------
   Start              : 24 februari 2009
-  Door               : Mollie B.V. (RDF) © 2009
+  Door               : Mollie B.V. (RDF) ï¿½ 2009
 
   Versie             : 1.12 (gebaseerd op de Mollie iDEAL class van
                        Concepto IT Solution - http://www.concepto.nl/)
@@ -178,7 +178,7 @@ class iDEAL_Payment
 	{
 		if (!$this->setDescription($description) or !$this->setAmount($amount))
 		{
-			$this->error_message = "U moet een omschrijving én bedrag (in centen) opgeven voor de iDEAL link. Tevens moet het bedrag minstens " . self::MIN_TRANS_AMOUNT . ' eurocent zijn. U gaf ' . (int) $amount . ' cent op.';
+			$this->error_message = "U moet een omschrijving een bedrag (in centen) opgeven voor de iDEAL link. Tevens moet het bedrag minstens " . self::MIN_TRANS_AMOUNT . ' eurocent zijn. U gaf ' . (int) $amount . ' cent op.';
 			return false;
 		}
 		
