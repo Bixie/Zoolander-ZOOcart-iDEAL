@@ -1,5 +1,7 @@
 #Bixie - ZOOcart iDEAL payment
 
+[![Join the chat at https://gitter.im/Bixie/Zoolander-ZOOcart-iDEAL](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Bixie/Zoolander-ZOOcart-iDEAL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Payment engine for ZOOlanders ZOOcart by www.zoolanders.com.
 
 Thanks to www.ideal-checkout.nl, whose engine is integrated in this plugin.
