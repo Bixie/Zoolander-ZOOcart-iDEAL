@@ -28,7 +28,7 @@
 			// Look for proper GET's en POST's
 			if (!isset($this->order_id) || !isset($this->order_code)) //bixie
 			{
-				$sHtml .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_INVALID_REQUEST');
+				$sHtml .= '<p>Invalid issuer request.</p>';
 			}
 			else
 			{
