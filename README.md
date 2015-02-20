@@ -6,16 +6,20 @@ Thanks to www.ideal-checkout.nl, whose engine is integrated in this plugin.
 
 Questions and bug-reports via [issues](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/issues) on GitHub.
 
-_This plugin is not supported by or affiliated with ideal-checkout.nl. Support and questions only via this repository_
+----
+
+__This plugin is not supported by or affiliated with ideal-checkout.nl. [Support and questions only via this repository](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/issues)__
 
 ----
 
 ##Settings
 
 Each gateway has its own settings. To make it uniform in the settings the fields key 1 through 3 are used. For more info on configuring the iDEAL settings, see www.ideal-checkout.nl.
+Listed below are the converted gateways. The gateways in the folder `disabled` have not yet been converted. Check the git-history on how to convert a gateway. I you have, please create a PR to merge it back in to the plugin.
 
 ###Rabo Omnikassa
 _ideal-omnikassa_
+
 * Id 1: PSPID (Obtained from bank)
 * Id 2: SubID (usually 0)
 * Key 1: Password used to generate hash
@@ -24,6 +28,7 @@ _ideal-omnikassa_
 
 ###ING Advanced
 _ideal-professional-v3_
+
 * Id 1: PSPID (Obtained from bank)
 * Id 2: SubID (usually 0)
 * Key 1: Private key pass, password used to generate private key.
@@ -43,6 +48,7 @@ Only merchantID is required. Keys unused.
 
 ###ABN Internetkassa
 _ideal-internetkassa_
+
 * Id 1: PSPID (Obtained from bank)
 * Id 2: SubID (usually 0)
 * Key 1: SHA1 IN key
@@ -54,19 +60,28 @@ This method has not been properly tested yet. If you test it and it works, pleas
 
 ###Mollie
 _ideal-mollie_
-* Id 1: Partner ID (Deze ontvang je van Mollie.)
-* Id 2: Profiel ID/KEY (Deze ontvang je van Mollie. Let op: Dit is NIET je wachtwoord, maar een uniek ID om verschillende websites/webshops via 1 Mollie account te kunnen beheren. Maak je geen gebruik van verschillende profielen, dan kun je dit veld leeg laten)
+
+* Id 1: Partner ID (Obtained from Mollie.)
+* Id 2: Profiel ID/KEY (Obtained from Mollie. _Let op: Dit is NIET je wachtwoord, maar een uniek ID om verschillende websites/webshops via 1 Mollie account te kunnen beheren. Maak je geen gebruik van verschillende profielen, dan kun je dit veld leeg laten)_
 * Key 1: unused
 * Key 2: unused
 * Key 3: unused
 
+Don't use the auto-submit option, because the user has to select his bank first.
+
 ###Sisow
-_ideal-sisow_
+_ideal-s+isow_
+
 * Id 1: Merchant ID
 * Id 2: Merchant KEY
-* Key 1: Shop ID (Deze ontvang je van Sisow)
+* Key 1: Shop ID (Obtained from Sisow)
 * Key 2: unused
 * Key 3: unused
 
+Don't use the auto-submit option, because the user has to select his bank first.
+
+----
+
+__This plugin is not supported by or affiliated with ideal-checkout.nl. [Support and questions only via this repository](https://github.com/Bixie/Zoolander-ZOOcart-iDEAL/issues)__
 
 ----
