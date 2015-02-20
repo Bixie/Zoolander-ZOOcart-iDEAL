@@ -11,12 +11,6 @@ class Gateway extends GatewayCore {
 	public function __construct ($settingsData = array(), $rPluginParams) {
 		$this->init($settingsData);
 		$this->rPluginParams = $rPluginParams;
-		//test merchant, default ID
-		if ($this->rPluginParams->get('test', 0)) {
-			$this->aSettings['MERCHANT_ID'] = '002020000000001';
-			$this->aSettings['HASH_KEY'] = '002020000000001_KEY1';
-			$this->aSettings['KEY_VERSION'] = '1';
-		}
 	}
 
 
@@ -27,8 +21,7 @@ class Gateway extends GatewayCore {
 		$sHtml = '';
 
 		// Look for proper GET's en POST's
-		if (!isset($this->order_id) || !isset($this->order_code)) //bixie
-		{
+		if (!isset($this->order_id) || !isset($this->order_code)) {
 			$sHtml .= '<p>Invalid issuer request.</p>';
 		} else {
 			//bixie
@@ -37,8 +30,7 @@ class Gateway extends GatewayCore {
 
 
 			// Lookup transaction
-			if ($this->getRecordByOrder($sOrderId, $sOrderCode)) //bixie
-			{
+			if ($this->getRecordByOrder($sOrderId, $sOrderCode)) {
 				if (strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
 					$sHtml .= JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_ALREADY_COMPLETE');
 				} elseif ((strcmp($this->oRecord['transaction_status'], 'OPEN') === 0) && !empty($this->oRecord['transaction_url'])) {
@@ -57,7 +49,7 @@ class Gateway extends GatewayCore {
 
 					$aIssuerList = $oMollie->getBanks();
 					$sIssuerList = '';
-					$actionUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal','html').'&transaction=1&order_id=' . $sOrderId . '&order_code=' . $sOrderCode;
+					$actionUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal', 'html') . '&transaction=1&order_id=' . $sOrderId . '&order_code=' . $sOrderCode;
 
 
 					if ($aIssuerList === false) {
@@ -81,14 +73,14 @@ class Gateway extends GatewayCore {
 <div class="uk-margin">
 	<form action="' . htmlspecialchars($actionUrl) . '" method="post" id="checkout" class="uk-form uk-form-horizontal">
 		<div class="uk-form-formrow">
-			<label class="uk-form-label">'.JText::_('PLG_ZOOCART_PAYMENT_IDEAL_CHOOSE_BANK').'</label>
+			<label class="uk-form-label">' . JText::_('PLG_ZOOCART_PAYMENT_IDEAL_CHOOSE_BANK') . '</label>
 			<div class="uk-form-controls">
 				<select name="issuer_id">' . $sIssuerList . '</select>
 			</div>
 		</div>
 		<div class="zoocart-checkout-buttons uk-nbfc">
 			<button class="uk-button uk-button-success uk-float-right">
-				<i class="uk-icon-shopping-cart uk-margin-small-right"></i>'.JText::_('PLG_ZOOCART_CHECKOUT').'
+				<i class="uk-icon-shopping-cart uk-margin-small-right"></i>' . JText::_('PLG_ZOOCART_CHECKOUT') . '
 			</button>
 		</div>
 	</form>
@@ -187,9 +179,6 @@ class Gateway extends GatewayCore {
 			$returnResult['messageStyle'] = 'uk-alert-danger';
 			$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 		} else {
-//				$sOrderId = $_GET['order_id'];
-//				$sOrderCode = $_GET['order_code'];
-
 			// Lookup transaction
 			if ($this->getRecordByOrder()) {
 				// Transaction already finished
