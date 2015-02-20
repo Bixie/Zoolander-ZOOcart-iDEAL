@@ -27,7 +27,7 @@ _`/ideal/idealcheckout/gateways/ideal-omnikassa`_
 * Key 3: unused
 
 ###ING Advanced
-_`/ideal/idealcheckout/gateways/ideal-professional-v3_
+_`/ideal/idealcheckout/gateways/ideal-professional-v3`_
 
 * Id 1: PSPID (Obtained from bank)
 * Id 2: SubID (usually 0)
