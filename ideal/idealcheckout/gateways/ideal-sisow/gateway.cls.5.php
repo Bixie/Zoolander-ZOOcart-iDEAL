@@ -41,8 +41,11 @@ class Gateway extends GatewayCore {
 					$oSisow->setMerchant($this->aSettings['MERCHANT_ID'], $this->aSettings['MERCHANT_KEY'], $this->aSettings['SHOP_ID']);
 					$oSisow->setCachePath($this->aSettings['TEMP_PATH']);
 
-
-					$aIssuerList = $oSisow->doIssuerRequest();
+					if ($this->rPluginParams->get('test',0)) {
+						$aIssuerList = array('99'=>'Sisow bank (test)');
+					} else {
+						$aIssuerList = $oSisow->doIssuerRequest();
+					}
 					$sIssuerList = '';
 					$actionUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal', 'html') . '&transaction=1&order_id=' . $sOrderId . '&order_code=' . $sOrderCode;
 
@@ -110,8 +113,10 @@ class Gateway extends GatewayCore {
 					$oSisow = new Sisow_Ideal();
 					$oSisow->setMerchant($this->aSettings['MERCHANT_ID'], $this->aSettings['MERCHANT_KEY'], $this->aSettings['SHOP_ID']);
 					$oSisow->setCachePath($this->aSettings['TEMP_PATH']);
+					$returnUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal');
+					$pushUrl = $this->zoo->zoocart->payment->getCallbackUrl('ideal').'&push=1';
 
-					list($sTransactionId, $sTransactionUrl) = $oSisow->doTransactionRequest($sIssuerId, $this->oRecord['order_id'], $this->oRecord['transaction_amount'], $this->oRecord['transaction_description'], $this->oRecord['transaction_code'], idealcheckout_getRootUrl() . 'return.php', idealcheckout_getRootUrl() . 'report.php');
+					list($sTransactionId, $sTransactionUrl) = $oSisow->doTransactionRequest($sIssuerId, $this->oRecord['order_id'], $this->oRecord['transaction_amount'], $this->oRecord['transaction_description'], $this->oRecord['transaction_code'], $returnUrl, $pushUrl);
 
 					if ($oSisow->hasErrors()) {
 						idealcheckout_output('<code>' . var_export($oSisow->getErrors(), true) . '</code>');
@@ -202,30 +207,7 @@ class Gateway extends GatewayCore {
 
 					$this->save();
 
-					//get status
-					switch ($this->oRecord['transaction_status']) {
-						case 'SUCCESS':
-							$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_SUCCESS');
-							$returnResult['messageStyle'] = 'uk-alert-success';
-							$returnResult['success'] = 1;
-							$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
-							break;
-						case 'OPEN':
-							$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_PENDING');
-							$returnResult['messageStyle'] = 'uk-alert-warning';
-							$returnResult['success'] = -1;
-							$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
-							break;
-						case 'CANCELLED':
-						case 'EXPIRED':
-						case 'FAILURE':
-						default:
-							$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_FAILED');
-							$returnResult['messageStyle'] = 'uk-alert-danger';
-							$returnResult['success'] = 0;
-							$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
-							break;
-					}
+					$this->processStatus($this->oRecord['transaction_status'], $returnResult);
 
 				}
 			} else {
@@ -281,11 +263,12 @@ class Gateway extends GatewayCore {
 					$this->oRecord['transaction_log'] .= "\n\n";
 				}
 
-				$this->oRecord['transaction_log'] .= 'Executing StatusRequest on ' . date('Y-m-d, H:i:s') . ' for #' . $this->oRecord['transaction_id'] . '. Recieved: ' . $this->oRecord['transaction_status'];
+				$this->oRecord['transaction_log'] .= 'Receiving StatusRequest on ' . date('Y-m-d, H:i:s') . ' for #' . $this->oRecord['transaction_id'] . '. Recieved: ' . $this->oRecord['transaction_status'];
 
 				$this->save();
 
-				$returnResult['status'] = $this->oRecord['transaction_status'];
+				$this->processStatus($this->oRecord['transaction_status'], $returnResult);
+
 				$returnResult['message'] = 'De transactie status is bijgewerkt.';
 			} else {
 				$returnResult['message'] = 'Invalid report request.';
@@ -295,6 +278,33 @@ class Gateway extends GatewayCore {
 		return $returnResult;
 	}
 
+	protected function processStatus ($status, &$returnResult){
+		$returnResult['status'] = $status;
+		//get status
+		switch ($status) {
+			case 'SUCCESS':
+				$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_SUCCESS');
+				$returnResult['messageStyle'] = 'uk-alert-success';
+				$returnResult['success'] = 1;
+				$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
+				break;
+			case 'OPEN':
+				$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_PENDING');
+				$returnResult['messageStyle'] = 'uk-alert-warning';
+				$returnResult['success'] = -1;
+				$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
+				break;
+			case 'CANCELLED':
+			case 'EXPIRED':
+			case 'FAILURE':
+			default:
+				$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_FAILED');
+				$returnResult['messageStyle'] = 'uk-alert-danger';
+				$returnResult['success'] = 0;
+				$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
+				break;
+		}
+	}
 
 	// Validate all open transactions
 	public function doValidate () {
