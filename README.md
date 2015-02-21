@@ -75,8 +75,8 @@ Don't use the auto-submit option, because the user has to select his bank first.
 _`/ideal/idealcheckout/gateways/ideal-sisow`_
 
 * Id 1: Merchant ID
-* Id 2: Merchant KEY
-* Key 1: Shop ID (Obtained from Sisow)
+* Id 2: Shop ID (Obtained from Sisow, usually 0)
+* Key 1: Merchant KEY
 * Key 2: unused
 * Key 3: unused
 

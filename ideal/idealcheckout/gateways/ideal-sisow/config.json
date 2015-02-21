@@ -4,11 +4,11 @@
 		"default":""
 	},
 	"id2": {
-		"key":"MERCHANT_KEY",
+		"key":"SHOP_ID",
 		"default":""
 	},
 	"key1": {
-		"key":"SHOP_ID",
+		"key":"MERCHANT_KEY",
 		"default":""
 	},
 	"test": {
