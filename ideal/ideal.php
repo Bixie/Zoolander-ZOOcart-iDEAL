@@ -38,7 +38,9 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 			if ($data['order']) {
 				return $data['order']->net * $perc;
 			} else {
-				return $this->app->zoocart->cart->getSubtotal($this->app->user->get()->id) * $perc;
+				$total  = $this->app->zoocart->cart->getTotal($this->app->user->get()->id)
+										- $this->app->zoocart->cart->getPaymentFee();
+				return $total * $perc;
 			}
 		}
 
