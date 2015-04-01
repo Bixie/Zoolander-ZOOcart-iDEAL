@@ -62,12 +62,15 @@ This method has not been properly tested yet. If you test it and it works, pleas
 
 ###Mollie
 _`/ideal/idealcheckout/gateways/ideal-mollie`_
+Using the Mollie REST api.
 
-* Id 1: Partner ID (Obtained from Mollie.)
-* Id 2: Profiel ID/KEY (Obtained from Mollie. _Let op: Dit is NIET je wachtwoord, maar een uniek ID om verschillende websites/webshops via 1 Mollie account te kunnen beheren. Maak je geen gebruik van verschillende profielen, dan kun je dit veld leeg laten)_
-* Key 1: unused
-* Key 2: unused
+* Id 1: unused
+* Id 2: unused
+* Key 1: live API key
+* Key 2: test API key
 * Key 3: unused
+
+Webhook url: `http://www.site.nl/index.php?option=com_zoolanders&controller=orders&task=callback&format=raw&payment_method=ideal&push=1`
 
 Don't use the auto-submit option, because the user has to select his bank first.
 
