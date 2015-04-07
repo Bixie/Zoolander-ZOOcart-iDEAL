@@ -1,6 +1,6 @@
 {
 	"id1" :{
-		"key":"PARTNER_ID",
+		"key":"PROFILE_ID",
 		"default":""
 	},
 	"id2": {
@@ -8,11 +8,11 @@
 		"default":""
 	},
 	"key1": {
-		"key":"HASH_KEY",
+		"key":"API_KEY",
 		"default":""
 	},
 	"key2": {
-		"key":"KEY_VERSION",
+		"key":"API_KEY_TEST",
 		"default":"1"
 	},
 	"test": {
