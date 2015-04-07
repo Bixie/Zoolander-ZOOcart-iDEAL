@@ -226,6 +226,14 @@ class Gateway extends GatewayCore {
 						$returnResult['messageStyle'] = 'uk-alert-danger';
 						$returnResult['redirect'] = $this->oRecord['transaction_failure_url'];
 					}
+
+					if (empty($this->oRecord['transaction_log']) == false) {
+						$this->oRecord['transaction_log'] .= "\n\n";
+					}
+
+					$this->oRecord['transaction_log'] .= 'Return from Mollie on ' . date('Y-m-d, H:i:s') . ' for #' . $this->oRecord['transaction_id'] . '. Recieved: ' . $this->oRecord['transaction_status'];
+
+					$this->save();
 				}
 
 			} else {
@@ -293,7 +301,7 @@ class Gateway extends GatewayCore {
 						$this->oRecord['transaction_log'] .= "\n\n";
 					}
 
-					$this->oRecord['transaction_log'] .= 'Executing StatusRequest on ' . date('Y-m-d, H:i:s') . ' for #' . $sTransactionId . '. Recieved: ' . $this->oRecord['transaction_status'];
+					$this->oRecord['transaction_log'] .= 'Push from Mollie on ' . date('Y-m-d, H:i:s') . ' for #' . $sTransactionId . '. Recieved: ' . $this->oRecord['transaction_status'];
 
 					$this->save();
 
