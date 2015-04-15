@@ -189,10 +189,11 @@ class Gateway extends GatewayCore {
 			// Lookup transaction
 			if ($this->getRecordByOrder($_GET['order_id'], $_GET['order_code'])) {
 				$returnResult['order_id'] =  $this->oRecord['order_id'];
+				$returnResult['valid'] = true;
+				$returnResult['transaction_id'] = $this->oRecord['transaction_id'];
 				// Transaction already finished by webhook
 				if (strcmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
-					$returnResult['valid'] = true;
-					$returnResult['success'] = 1;
+					$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_PAYED;
 					$returnResult['status'] = 'SUCCESS';
 					$returnResult['debug'] .= $returnResult['message'] = 'al afgehandeld';
 					if ($this->oRecord['transaction_success_url']) {
@@ -212,12 +213,12 @@ class Gateway extends GatewayCore {
 						if ($payment->isPaid() == true) {
 							$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_SUCCESS');
 							$returnResult['messageStyle'] = 'uk-alert-success';
-							$returnResult['success'] = 1;
+							$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_PAYED;
 							$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
 						} elseif ($payment->isOpen() == false) {
 							$returnResult['message'] = JText::_('PLG_ZOOCART_PAYMENT_IDEAL_TRANS_FAILED');
 							$returnResult['messageStyle'] = 'uk-alert-danger';
-							$returnResult['success'] = 0;
+							$returnResult['success'] = JPaymentDriver::ZC_PAYMENT_FAILED;
 							$returnResult['redirect'] = $this->oRecord['transaction_payment_url'];
 						}
 					} catch (Mollie_API_Exception $e) {
@@ -269,6 +270,7 @@ class Gateway extends GatewayCore {
 			$returnResult['redirect'] = false;
 		} else {
 			$sTransactionId = $_GET['id'];
+			$returnResult['valid'] = true;
 			try {
 				$mollie = new iDEAL_Payment();
 				if (!empty($this->aSettings['TEST_MODE'])) {
