@@ -174,8 +174,9 @@ class Gateway extends GatewayCore {
 
 			// Lookup record
 			if ($this->getRecordByTransaction()) {
+				$returnResult['valid'] = true;
+				$returnResult['order_id'] = $this->oRecord['order_id'];
 				if (strcasecmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
-					$returnResult['valid'] = true;
 					$returnResult['success'] = 1;
 					$returnResult['status'] = 'SUCCESS';
 					$returnResult['debug'] .= $returnResult['message'] = 'al afgehandeld';
@@ -248,6 +249,8 @@ class Gateway extends GatewayCore {
 				$oSisow->setMerchant($this->aSettings['MERCHANT_ID'], $this->aSettings['MERCHANT_KEY'], $this->aSettings['SHOP_ID']);
 				$oSisow->setCachePath($this->aSettings['TEMP_PATH']);
 
+				$returnResult['valid'] = true;
+				$returnResult['order_id'] = $this->oRecord['order_id'];
 				$this->oRecord['transaction_status'] = $oSisow->doStatusRequest($sTransactionId, $sTransactionCode, $sTransactionStatus, $sSignature);
 
 				if ($oSisow->hasErrors()) {
@@ -355,5 +358,3 @@ class Gateway extends GatewayCore {
 		idealcheckout_output('<p>' . $sHtml . '</p><p>&nbsp;</p><p><input type="button" value="Venster sluiten" onclick="javascript: window.close();"></p>');
 	}
 }
-
-?>
