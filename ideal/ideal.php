@@ -28,7 +28,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 			$this->app->path->register($path, 'tables');
 			$this->app->loader->register('IdealcheckoutTable', 'tables:idealcheckout.php');
 		}
-
+		$this->loadLanguage();
 	}
 
 	public function getPaymentFee($data = array()) {
