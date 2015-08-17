@@ -245,6 +245,15 @@ class Gateway extends GatewayCore {
 
 			// Lookup record
 			if ($this->getRecordByTransaction()) {
+				if (strcasecmp($this->oRecord['transaction_status'], 'SUCCESS') === 0) {
+					$returnResult['success'] = 1;
+					$returnResult['status'] = 'SUCCESS';
+					$returnResult['debug'] .= $returnResult['message'] = 'al afgehandeld';
+					if ($this->oRecord['transaction_success_url']) {
+						$returnResult['redirect'] = $this->oRecord['transaction_success_url'];
+					}
+					return $returnResult;
+				}
 				$oSisow = new Sisow_Ideal();
 				$oSisow->setMerchant($this->aSettings['MERCHANT_ID'], $this->aSettings['MERCHANT_KEY'], $this->aSettings['SHOP_ID']);
 				$oSisow->setCachePath($this->aSettings['TEMP_PATH']);
