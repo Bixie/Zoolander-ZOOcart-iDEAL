@@ -138,7 +138,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 		$data['order']->state = $app->zoocart->getConfig()->get('payment_pending_orderstate', 4);
 		$app->zoocart->table->orders->save($data['order']);
 
-		return parent::render($data);
+		return parent::zoocartRender($data);
 	}
 	
 	/**
@@ -154,7 +154,7 @@ class plgZoocart_PaymentIdeal extends JPaymentDriver {
 	 * 			redirect: false (default) or internal url
 	 *         )
 	 */
-	public function zoocartCallback($data = array()) {
+	public function zoocartCallback(&$data = array()) {
 		$data = $this->app->data->create($data);
 		//get the gatewaysettings
 		$idealType = $this->params->get('type', 'ideal-simulator');
